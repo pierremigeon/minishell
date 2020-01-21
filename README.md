@@ -8,9 +8,7 @@ This is the 42 project Minishell! The instructions are to build a shell that rea
 To check out my shell:
 
 	1. clone repository
-
 	2. run `make`
-
 	3. `minishell`
 
 
