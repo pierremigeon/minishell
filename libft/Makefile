@@ -21,14 +21,17 @@ NAME = libft.a
 all: $(NAME)
 
 $(NAME):
-	$(COMPILER) $(FLAGS) $(SOURCES) -I $(HEADER)
-	ar rc $(LIBNAME) $(OFILE)
-	ranlib $(LIBNAME)
+	@echo "compiling libft"
+	@$(COMPILER) $(FLAGS) $(SOURCES) -I $(HEADER)
+	@ar rc $(LIBNAME) $(OFILE)
+	@ranlib $(LIBNAME)
 
 clean:
-	/bin/rm -f $(OFILE)
+	@echo "Cleaning *.o from libft"
+	@/bin/rm -f $(OFILE)
 
 fclean: clean
-	/bin/rm -f $(LIBNAME)
+	@echo "Cleaning everything from libft"
+	@/bin/rm -f $(LIBNAME)
 
 re: fclean all

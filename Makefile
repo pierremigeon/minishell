@@ -3,8 +3,9 @@
 
 
 all:
+	@make -C libft
 	@echo "Compiling to executable and copying to path!"
-	@gcc main.c ./libft/libft.a -o minishell
+	@gcc ./src/main.c ./libft/libft.a -o minishell
 	@chmod +x ./minishell
 	@cp ./minishell /usr/local/bin/minishell
 
@@ -13,9 +14,20 @@ test:
 	@gcc -g main.c ./libft/libft.a -o minishell	
 
 edit:
-	vi main.c
+	vi ./src/main.c
 
 clean:
 	@echo "Cleaning up files"
 	@rm ./minishell
 	@if [ -e minishell.dSYM ]; then rm -rf minishell.dSYM; fi
+	@echo "Cleaning up libft"
+	@make clean -C libft
+
+fclean:
+	@echo "Cleaning up everything"
+	@rm ./minishell
+	@if [ -e minishell.dSYM ]; then rm -rf minishell.dSYM; fi
+	@echo "Cleaning up libft"
+	@make fclean -C libft
+
+re: fclean all

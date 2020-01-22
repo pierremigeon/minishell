@@ -11,7 +11,7 @@ To check out my shell:
 2. run `make` (places copy of minishell in /usr/local/bin/)
 3. run `minishell` to launch the shell.
 
-Project requirements:
+## Project requirements:
 
 1. Create a UNIX command interpreter
 2. Displays a prompt "&> " while waiting for command
