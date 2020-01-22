@@ -93,5 +93,6 @@ void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 t_list				*ft_lstmap2(t_list *lst, t_list *(*f)(t_list *elem));
 int				get_next_line(const int fd, char **line);
+char    			*ft_strjoin_free(char *s1, char const *s2);
 
 #endif
