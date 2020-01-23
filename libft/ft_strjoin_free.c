@@ -25,7 +25,9 @@ char	*ft_strjoin_free(char *s1, char const *s2)
 	if (!(merge = (char *)malloc(sizeof(char) * ++len)))
 		return (NULL);
 	ft_strcpy(merge, s1);
-	merge[ft_strlen(s1)] = '\n';
+	len = ft_strlen(s1);
+	merge[len] = '\n';
+	merge[len + 1] = '\0';
 	ft_strcat(merge, s2);
 	free(s1);
 	return (merge);

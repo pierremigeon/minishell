@@ -11,7 +11,9 @@ all:
 
 test:
 	@echo "Compiling for testing with lldb"
-	@gcc -g main.c ./libft/libft.a -o minishell	
+	@gcc -g ./src/main.c ./libft/libft.a -o minishell	
+runtest:
+	@lldb minishell
 
 edit:
 	vi ./src/main.c
