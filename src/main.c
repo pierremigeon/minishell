@@ -1,5 +1,7 @@
 #include "../includes/minishell.h"
 
+#define HASH_SIZE 50
+
 void	read_error(void)
 {
 	write(1, "Read error!\n", 12);
@@ -19,17 +21,17 @@ void	no_such_command(char *str)
 	ft_putstr(": command not found\n");
 }
 
-int	not_in_path(char *str, char **env)
+int	not_in_path(char *str, t_hlist **env_h)
 {
 	return (1);
-	printf ("%s %s", str, *env);
+	printf ("%s %s", str, env_h[0]->contents);
 }
 
-int	fork_process(char *str, char **env)
+int	fork_process(char *str, t_hlist **env_h)
 {
 	pid_t	pid;
 
-	if (not_in_path(str, env))
+	if (not_in_path(str, env_h))
 		return (1);
 	pid = fork();
 	if (pid == 0)
@@ -42,6 +44,13 @@ int	fork_process(char *str, char **env)
 }
 
 /*  cd module  */ 
+
+int	get_key(char *str)
+{
+	if (*str == '~')
+		return (ft_strlen("HOME") % HASH_SIZE);
+	return (ft_strlen(str) % HASH_SIZE);
+}
 
 void	cd_error(char *str)
 {
@@ -56,17 +65,21 @@ void	cd_error(char *str)
         ft_putstr(": No such file or directory\n");
 }
 
-const char *get_tilde(char **env)
+const char *get_tilde(t_hlist **env_h)
 {
-	int n;
+	int key;
 
-	n = 0;
-	while (ft_strncmp(env[n], "HOME=", 5))
-		++n;
-	return ((const char *)(env[n] + 5));
+	key = get_key("HOME");
+	while (env_h[key]->next != NULL)
+	{
+		if(!(ft_strcmp(env_h[key]->var_name, "HOME")))
+			return ((const char *)env_h[key]->contents);
+		env_h[key] = env_h[key]->next;
+	}
+	return ((const char *)env_h[key]->contents);
 }
 
-int	cd(char *str, char **env)
+int	cd(char *str, t_hlist **env_h)
 {
 	while (*str == ' ')
 		str++;
@@ -74,7 +87,7 @@ int	cd(char *str, char **env)
 	while (*str == ' ')
 		str++;
 	if (!*str)
-		chdir(get_tilde(env));
+		chdir(get_tilde(env_h));
 	else if(chdir((const char *)str))
 		cd_error(str);
 	return (1);
@@ -184,12 +197,12 @@ int	equal_wspace(char *str1, char *str2, size_t len)
 	return (0);
 }
 
-int	built_in(char **str, char **env)
+int	built_in(char **str, t_hlist **env_h)
 {
 	if (equal_wspace(*str, "echo ", 4))
 		return (echo_0(str));
 	if (equal_wspace(*str, "cd ", 2))
-		return (cd(*str, env));
+		return (cd(*str, env_h));
 	if ((strcmp(*str, "setenv")) == 0)
 		;
 	if ((strcmp(*str, "unsetenv")) == 0)
@@ -205,39 +218,44 @@ int	built_in(char **str, char **env)
  	Handling expansions- ultimately store the lengths of everything in a hash table 
 	so that you don't have to calculate the length of these strings each time you 
 	have to run expansions. 
+*/
 
-
-int	length_of_out(char *str, char **env)
+int	length_of_out(char *str, t_hlist **env_h)
 {
-	int len;
-	int n;
+	int 	len[3] = { 0 };
+	t_hlist *temp;
+	char 	*ptr;
 
-	len = 0;
-	while (*(str + len))
+	while (*(str + len[0]))
 	{
-		if (*(str + len) == '~')
+		if ((*(str + len[0]) == '$') || (*(str + len[0]) == '~'))
 		{
-			n = 0;
-			while (ft_strncmp(env[n], "HOME=", 5))
-				++n;
-			len += ft_strlen(env[n] + 5);
+			if (*(str + len[0]) == '$')
+				++len[0];
+			if (!(ptr = ft_strchr(str + len[0], ' ')) && (len[2] = 1))
+				ptr = ft_strchr(str + len[0], 0);
+			*ptr = '\0';
+			temp = env_h[get_key(str + len[0])];
+			while (ft_strcmp(temp->var_name, str + len[0]))
+				temp = temp->next;
+			len[1] += temp->con_len - temp->var_len;
+			if (len[2] == 0)
+				*ptr = ' ';
 		}
-		if (*(str + len) == '$')
-		{
-			len++;
-			while
-		}
-		len++;
+		len[2] = 0;
+		++len[0];
 	}
+	return (len[1]);
 }
 
-void	expand_command(char **str, char **env)
+void	expand_command(char **str, t_hlist **env_h)
 {
-	return;
 	char *out;
 	int i;
 
-	i = length_of_out(*str, env);
+	i = length_of_out(*str, env_h);
+	printf ("The size is calculated to be %i\n", i);
+/*
 	if(!(out = (char *)malloc(sizeof(char) * ++i)))
 		exit(1);
 	while (*(*str + i))
@@ -249,35 +267,131 @@ void	expand_command(char **str, char **env)
 		i++;
 	}
 	printf ("%s %s", *str, *env);
-}
 */
+}
 
-void	run_command(char **str, char **env)
+void	run_command(char **str, t_hlist **env_h)
 {
 	int	status;
 
 	status = 0;
-	//expand_command(str, env);
-	if (!(built_in(str, env)))
-		status = fork_process(*str, env);
+	expand_command(str, env_h);
+	if (!(built_in(str, env_h)))
+		status = fork_process(*str, env_h);
 	if (status)
 		no_such_command(*str);
+}
+
+t_hlist *new_hash_node(char *env)
+{
+	t_hlist *new;
+	char *ptr;
+
+        if(!(new = (t_hlist *)malloc(sizeof(t_hlist))))
+		exit(1);
+	ptr = ft_strchr(env, '=');
+	*ptr = '\0';
+	new->var_name = ft_strdup(env);
+	new->contents = ft_strdup(ptr + 1);
+	new->con_len = ft_strlen(env) + 1;
+	new->var_len = ft_strlen(ptr + 1);
+	*ptr = '=';
+	new->next = NULL;
+	return (new);
+}
+
+char *get_home(t_hlist **env_h)
+{
+	t_hlist *temp;
+	char *out;
+
+	temp = env_h[get_key("~")];
+	while (ft_strcmp(temp->var_name, "HOME"))
+		temp = temp->next;
+	out = ft_strjoin("~=", temp->contents);
+	return (out);
+}
+
+void	add_tilde(t_hlist **env_h)
+{
+	t_hlist *temp;
+	char *home;
+
+	home = get_home(env_h);
+	temp = env_h[get_key("~")];
+	if (temp == NULL)
+		temp = new_hash_node("~");
+	else
+	{
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new_hash_node(home);
+	}
+	free(home);
+}
+
+void	get_env(t_hlist	**env_h, char **env)
+{
+	int 	n;
+	int	key;
+	char 	*ptr;
+	t_hlist *temp;
+
+	n = -1;
+	while (env[++n])
+	{
+		ptr = ft_strchr(env[n], '=');
+		*ptr = '\0';
+		key = get_key(env[n]);
+		*ptr = '=';
+		if (env_h[key] == NULL)
+			env_h[key] = new_hash_node(env[n]);
+		else
+		{
+			temp = env_h[key];
+			while (temp->next != NULL)
+				temp = temp->next;
+			temp->next = new_hash_node(env[n]);
+		}	
+	}
+	add_tilde(env_h);
+}
+
+void	test_hash_table(t_hlist **env_h)
+{
+	int n;
+
+	n = 0;
+	while (n < HASH_SIZE)
+	{
+		while (env_h[n] != NULL)
+		{
+			printf ("%i is the index and %s is the name \n", n, env_h[n]->var_name);
+			env_h[n] = env_h[n]->next;
+		}
+		++n;
+	}
+	exit (0);
 }
 
 int	main()
 {
 	char 		*line;
 	extern char 	**environ;
+	t_hlist		*env_h[HASH_SIZE] = { NULL };
 	int		i;
 
+	get_env(env_h, environ);
+	//test_hash_table(env_h);
 	ft_putstr("$> ");
 	while ((i = get_next_line(0, &line)) > 0)
 	{
 		if (*line)
-			run_command(&line, environ);
+			run_command(&line, env_h);
 		ft_putstr("$> ");
 		free(line);
 	}
+	//free_everything(env_h);
 	if (i < 0)
 		read_error();
 	return (0);

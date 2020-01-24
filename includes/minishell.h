@@ -7,8 +7,11 @@
 
 typedef	struct		s_hlist
 {
-	char 		*name;
-	struct s_list 	*next;
+	char 		*var_name;
+	char		*contents;
+	int		var_len;
+	int		con_len;
+	struct s_hlist 	*next;
 }			t_hlist;
 
 #endif
