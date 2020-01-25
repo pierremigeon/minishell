@@ -18,6 +18,11 @@ typedef	struct		s_hlist
 	struct s_hlist 	*next;
 }			t_hlist;
 
+//ENV BUILTINS MODULE
+int             env(t_hlist **env_h);
+int             set_env(char *str, t_hlist **env_h);
+void            free_thlist(t_hlist *node);
+int             unset_env(char *str, t_hlist ***env_h);
 // ECHO MODULE
 void		putnendl(char *str, char c, int mode);
 char		get_ptr(char *str);
@@ -48,6 +53,7 @@ void		add_tilde(t_hlist **env_h);
 void		add_$(t_hlist **env_h);
 void		get_env(t_hlist	**env_h, char **env);
 void		test_hash_table(t_hlist **env_h);
-
+//FREE AND ERROR
+void		free_args(char **args);
 
 #endif
