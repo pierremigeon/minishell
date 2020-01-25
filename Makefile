@@ -1,19 +1,21 @@
 
-
-
+SRC= ./src/main.c ./src/echo.c ./src/cd.c ./src/env_hash.c ./src/expansion.c
 
 all:
 	@make -C libft
 	@echo "Compiling to executable and copying to path!"
-	@gcc ./src/main.c ./libft/libft.a -o minishell
+	@gcc $(SRC) ./libft/libft.a -o minishell
 	@chmod +x ./minishell
 	@cp ./minishell /usr/local/bin/minishell
 
 test:
 	@echo "Compiling for testing with lldb"
-	@gcc -g ./src/main.c ./libft/libft.a -o minishell	
+	@gcc -g $(SRC) ./libft/libft.a -o minishell	
+
 runtest:
 	@lldb minishell
+
+rt: test runtest
 
 edit:
 	vi ./src/main.c
