@@ -7,6 +7,7 @@
 
 #include "../libft/libft.h"
 #include <sys/wait.h>
+#include <dirent.h>
 
 typedef	struct		s_hlist
 {

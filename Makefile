@@ -20,6 +20,9 @@ rt: test runtest
 edit:
 	vi ./src/main.c
 
+edit_h:
+	vi ./includes/minishell.h
+
 clean:
 	@echo "Cleaning up files"
 	@rm ./minishell

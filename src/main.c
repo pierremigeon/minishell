@@ -19,22 +19,128 @@ void	no_such_command(char *str)
 	ft_putstr(": command not found\n");
 }
 
-int	in_path(char *str, t_hlist **env_h)
+void	free_args(char **args)
 {
-	return (0);
-	printf ("%s %s", str, env_h[0]->contents);
+	int i;
+
+	i = 0;
+	while (args[i])
+		free (args[i++]);
+	free(args);
 }
 
-int	fork_process(char *str, char **env)
+
+char *free_all_ret_one(char **paths, int i)
+{
+	int x;
+	char *out;
+
+	x = 0;
+	while (paths[x])
+	{
+		if (x == i)
+			out = ft_strdup(paths[x]);	
+		free(paths[x]);
+		++x;
+	}
+	free(paths);
+	return (out);
+}
+
+int	test_dir(char *prog, char *path)
+{
+	DIR 		*dirp;
+	struct dirent	*dp;
+
+	if (!(dirp = opendir(path)))
+		return (0);
+	while ((dp = readdir(dirp)))
+	{
+        	if (ft_strcmp(dp->d_name, prog) == 0) 
+		{
+			closedir(dirp);
+			return (1);
+		}
+	}
+	closedir(dirp);
+	return (0);
+}
+
+char	*first_name(char *str)
+{
+	char *out;
+	char *ptr;
+
+	while (*str && *str == ' ')
+		str++;
+	ptr = ft_strchr(str, ' ');
+	if (ptr)
+		*ptr = '\0';
+	out = ft_strdup(str);
+	if (ptr)
+		*ptr = ' ';
+	return (out);
+}
+
+char	*in_path(char *str, t_hlist **env_h)
+{
+	t_hlist *temp;
+	char 	**paths;
+	char 	*program;
+	int	i, x;
+
+	i = 0;
+	program = first_name(str);
+	temp = env_h[get_key("PATH")];
+	while (temp && ft_strcmp(temp->var_name, "PATH"))
+		temp = temp->next;
+	paths = ft_strsplit(temp->contents, ':');
+	while (paths[i])
+		if ((x = test_dir(program, paths[i++])))
+			return(free_all_ret_one(paths, --i));
+	free_args(paths);
+	free(program);
+	return (NULL);
+}
+
+char	*get_total_path(char *b_path, char *exec)
+{
+	char	*out;
+	char	*ptr;
+	int	i;
+
+	i = 0;
+	while (b_path[i])
+		++i;
+	if (b_path[--i] == '/')
+	{
+		out = ft_strjoin(b_path, exec);
+		free(b_path);
+		return (out);
+	}
+	else
+	{
+		ptr = b_path;
+		b_path = ft_strjoin(b_path, "/");
+		free(ptr);
+		out = ft_strjoin(b_path, exec);
+		free(b_path);
+		return (out);
+	}
+	return (NULL);
+}
+
+int	fork_process(char *str, char **env, char *b_path)
 {
 	pid_t	pid;
+	char	*total_path;
+	char 	**args;
 
+	args = ft_strsplit(str, ' ');
+	total_path = get_total_path(b_path, args[0]);
 	pid = fork();
 	if (pid == 0)
-	{
-		//execve(str, args, env_h);
-		;
-	}
+		execve(total_path, args, env);
 	else if (pid > 0)
 	{
 		wait(NULL);
@@ -49,6 +155,75 @@ int	get_key(char *str)
 	return (ft_strlen(str) % HASH_SIZE);
 }
 
+int	env(t_hlist **env_h)
+{
+	int 	n;
+	t_hlist *temp;
+
+	n = 0;
+	while (n < HASH_SIZE)
+	{
+		temp = env_h[n];
+		while (temp)
+		{
+			ft_putstr(temp->var_name);
+			ft_putchar('=');
+			ft_putendl(temp->contents);
+			temp = temp->next;
+		}
+		++n;
+	}
+	return (1);
+}
+
+int	_setenv(char *str, t_hlist **env_h)
+{
+	t_hlist *temp;
+
+	str += 6;
+	while (*str == ' ')
+		str++;
+	if (*str == '\0')
+		env(env_h);	
+	return (1);
+}
+
+void	free_thlist(t_hlist *node)
+{
+	free(node->var_name);
+	free(node->contents);
+	free(node);
+}
+
+int	_unsetenv(char *str, t_hlist ***env_h)
+{
+	t_hlist *temp;
+	t_hlist *last;
+	char	**args;
+	int	i;
+
+	args = ft_strsplit(str, ' ');
+	i = 1;
+	while (args[i])
+	{
+		temp = *env_h[get_key(args[i])];
+		last = temp;
+		while (temp && ft_strcmp(temp->var_name, args[i]) && (last = temp))		
+			temp = temp->next;
+		if (temp)
+		{
+			if (last != temp)
+				last->next = temp->next;
+			else
+				*env_h[get_key(*args)] = temp->next;
+			free_thlist(temp);
+		}
+		i++;
+	}
+	free_args(args);
+	return (1);
+}
+
 int	equal_wspace(char *str1, char *str2, size_t len)
 {
 	while (*str1 == ' ')
@@ -60,24 +235,24 @@ int	equal_wspace(char *str1, char *str2, size_t len)
 	return (0);
 }
 
-int	built_in(char **str, t_hlist **env_h)
+int	built_in(char *str, t_hlist **env_h)
 {
-	if (equal_wspace(*str, "echo ", 4))
-		return (echo_0(*str));
-	if (equal_wspace(*str, "cd ", 2))
-		return (cd(*str, env_h));
-	if ((strcmp(*str, "setenv")) == 0)
-		;
-	if ((strcmp(*str, "unsetenv")) == 0)
-		;
-	if ((strcmp(*str, "env")) == 0)
-		;
-	if (equal_wspace(*str, "exit ", 4) || equal_wspace(*str, "quit ", 4))
+	if (equal_wspace(str, "echo ", 4))
+		return (echo_0(str));
+	if (equal_wspace(str, "cd ", 2))
+		return (cd(str, env_h));
+	if (equal_wspace(str, "setenv ", 6))
+		return (0);
+	if (equal_wspace(str, "unsetenv ", 8))
+		return (0);
+	if (equal_wspace(str, "env ", 3))
+		return (0);
+	if (equal_wspace(str, "exit ", 4) || equal_wspace(str, "quit ", 4))
 		exit(0);
 	return (0);
 }
 
-/* Main Flow control - would be better to check if it's a real command before expansions happen */
+/* Main Flow control */
 
 int	expandable(char *str)
 {
@@ -103,17 +278,34 @@ int	expandable(char *str)
 	return (0);
 }
 
-
 void	run_command(char **str, t_hlist **env_h, char **environ)
 {
+	char *exec_path;
+
 	if (expandable(*str))
 		*str = expand_command(*str, env_h);
-	if (!(built_in(str, env_h)))
+	if (!(built_in(*str, env_h)))
 	{
-		if (in_path(*str, env_h))
-			fork_process(*str, environ);
+		if ((exec_path = in_path(*str, env_h)))
+			fork_process(*str, environ, exec_path);
 		else
 			 no_such_command(*str);
+	}
+}
+
+void	free_env(t_hlist **env_h)
+{
+	int n;
+
+	n = 0;
+	while (n < HASH_SIZE)
+	{
+		while(env_h[n])
+		{
+			free(env_h[n]);
+			env_h[n] = env_h[n]->next;
+		}
+		++n;
 	}
 }
 
@@ -133,7 +325,7 @@ int	main()
 		ft_putstr("$> ");
 		free(line);
 	}
-	//free_everything(env_h);
+	free_env(env_h);
 	if (i < 0)
 		read_error();
 	return (0);
