@@ -21,3 +21,6 @@ To check out my shell:
 6. If the command is not found, then an approriate error message is displayed.
 7. The prompt is again displayed and waits for input from the user.
 
+## Project status:
+
+I have nearly completed this project, but am developing the env builtins and cleaning up the remaining memory leaks. 
