@@ -19,7 +19,7 @@ void	no_such_command(char *str)
 	ft_putstr(": command not found\n");
 }
 
-void	free_args(char **args)
+int	free_args(char **args)
 {
 	int i;
 
@@ -27,10 +27,11 @@ void	free_args(char **args)
 	while (args[i])
 		free (args[i++]);
 	free(args);
+	return (1);
 }
 
 
-char *free_all_ret_one(char **paths, int i)
+char *free_all_ret_one(char **paths, char *program, int i)
 {
 	int x;
 	char *out;
@@ -44,6 +45,7 @@ char *free_all_ret_one(char **paths, int i)
 		++x;
 	}
 	free(paths);
+	free(program);
 	return (out);
 }
 
@@ -97,7 +99,7 @@ char	*in_path(char *str, t_hlist **env_h)
 	paths = ft_strsplit(temp->contents, ':');
 	while (paths[i])
 		if ((x = test_dir(program, paths[i++])))
-			return(free_all_ret_one(paths, --i));
+			return(free_all_ret_one(paths, program, --i));
 	free_args(paths);
 	free(program);
 	return (NULL);
@@ -109,9 +111,7 @@ char	*get_total_path(char *b_path, char *exec)
 	char	*ptr;
 	int	i;
 
-	i = 0;
-	while (b_path[i])
-		++i;
+	i = ft_strlen(b_path);
 	if (b_path[--i] == '/')
 	{
 		out = ft_strjoin(b_path, exec);
@@ -142,9 +142,7 @@ int	fork_process(char *str, char **env, char *b_path)
 	if (pid == 0)
 		execve(total_path, args, env);
 	else if (pid > 0)
-	{
 		wait(NULL);
-	}	
 	else
 		ft_putstr("Error: Forking failed... \n");
 	return (0);
@@ -175,7 +173,7 @@ int	built_in(char *str, t_hlist **env_h)
 	if (equal_wspace(str, "setenv ", 6))
 		return (set_env(str, env_h));
 	if (equal_wspace(str, "unsetenv ", 8))
-		return (unset_env(str, &env_h));
+		return (unset_env(str, env_h));
 	if (equal_wspace(str, "env ", 3))
 		return (env(env_h));
 	if (equal_wspace(str, "exit ", 4) || equal_wspace(str, "quit ", 4))
