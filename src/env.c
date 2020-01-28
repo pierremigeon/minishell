@@ -1,5 +1,21 @@
 #include "../includes/minishell.h"
 
+
+int	env_2(t_hlist **env_h)
+{
+	t_hlist *temp;
+
+	temp = env_h[HASH_SIZE];
+	while (temp)
+	{
+		ft_putstr(temp->var_name);
+		ft_putchar('=');
+		ft_putendl(temp->contents);
+		temp = temp->next;
+	}
+	return (0);
+}
+
 int	env(t_hlist **env_h)
 {
 	int 	n;
@@ -33,6 +49,16 @@ void	reset_variable(t_hlist *node, char *contents)
 	node->contents = ft_strdup(contents);
 }
 
+int	args_len(char **args)
+{
+	int	ret;
+
+	ret = 0;
+	while (args[ret])
+		++ret;
+	return (ret);
+}
+
 int	set_env(char *str, t_hlist **env_h)
 {
 	t_hlist *temp;
@@ -40,8 +66,8 @@ int	set_env(char *str, t_hlist **env_h)
 	int	key;
 
 	args = ft_strsplit(str, ' ');
-	if (!args[1] || args[3])
-		return ((args[3]) ? free_args(args) && set_env_error() : free_args(args) && env(env_h));
+	if ( args_len(args) == 1 || args_len(args) == 4)
+		return (args_len(args) == 4) ? free_args(args) && set_env_error() : free_args(args) && env(env_h);
 	if (!args[2])
 		args[2] = ft_strdup("");
 	key = get_key(args[1]);

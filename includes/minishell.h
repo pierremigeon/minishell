@@ -21,6 +21,7 @@ typedef	struct		s_hlist
 
 //ENV BUILTINS MODULE
 int             env(t_hlist **env_h);
+int		env_2(t_hlist **env_h);
 int             set_env(char *str, t_hlist **env_h);
 void            free_thlist(t_hlist *node);
 int             unset_env(char *str, t_hlist **env_h);

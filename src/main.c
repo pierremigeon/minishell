@@ -175,7 +175,7 @@ int	built_in(char *str, t_hlist **env_h)
 	if (equal_wspace(str, "unsetenv ", 8))
 		return (unset_env(str, env_h));
 	if (equal_wspace(str, "env ", 3))
-		return (env(env_h));
+		return (env_2(env_h));
 	if (equal_wspace(str, "exit ", 4) || equal_wspace(str, "quit ", 4))
 		exit(0);
 	return (0);
@@ -242,7 +242,7 @@ int	main()
 {
 	char 		*line;
 	extern char 	**environ;
-	t_hlist		*env_h[HASH_SIZE] = { NULL };
+	t_hlist		*env_h[HASH_SIZE + 1] = { NULL };
 	int		i;
 
 	get_env(env_h, environ);

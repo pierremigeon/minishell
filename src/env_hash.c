@@ -128,6 +128,7 @@ void	get_env(t_hlist	**env_h, char **env)
 	t_hlist	*last = NULL;
 
 	n = -1;
+	env_h[HASH_SIZE] = env_h[wrap_get_key(env[0])];
 	while (env[++n])
 	{
 		key = wrap_get_key(env[n]);
