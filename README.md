@@ -23,4 +23,4 @@ To check out my shell:
 
 ## Project status:
 
-I have nearly completed this project, but am developing the env builtins and cleaning up the remaining memory leaks. 
+I have nearly completed this project, but am developing the env builtins and cleaning up the remaining memory leaks... last few bits
