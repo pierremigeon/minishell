@@ -19,7 +19,7 @@ void	no_such_command(char *str)
 	ft_putstr(": command not found\n");
 }
 
-void	free_args(char **args)
+int	free_args(char **args)
 {
 	int i;
 
@@ -27,10 +27,11 @@ void	free_args(char **args)
 	while (args[i])
 		free (args[i++]);
 	free(args);
+	return (1);
 }
 
 
-char *free_all_ret_one(char **paths, int i)
+char *free_all_ret_one(char **paths, char *program, int i)
 {
 	int x;
 	char *out;
@@ -44,6 +45,7 @@ char *free_all_ret_one(char **paths, int i)
 		++x;
 	}
 	free(paths);
+	free(program);
 	return (out);
 }
 
@@ -82,6 +84,12 @@ char	*first_name(char *str)
 	return (out);
 }
 
+char *no_path_variable(char *program)
+{
+	free(program);
+	return (NULL);
+}
+
 char	*in_path(char *str, t_hlist **env_h)
 {
 	t_hlist *temp;
@@ -94,10 +102,12 @@ char	*in_path(char *str, t_hlist **env_h)
 	temp = env_h[get_key("PATH")];
 	while (temp && ft_strcmp(temp->var_name, "PATH"))
 		temp = temp->next;
+	if (!temp)
+		return (no_path_variable(program));
 	paths = ft_strsplit(temp->contents, ':');
 	while (paths[i])
 		if ((x = test_dir(program, paths[i++])))
-			return(free_all_ret_one(paths, --i));
+			return(free_all_ret_one(paths, program, --i));
 	free_args(paths);
 	free(program);
 	return (NULL);
@@ -109,9 +119,7 @@ char	*get_total_path(char *b_path, char *exec)
 	char	*ptr;
 	int	i;
 
-	i = 0;
-	while (b_path[i])
-		++i;
+	i = ft_strlen(b_path);
 	if (b_path[--i] == '/')
 	{
 		out = ft_strjoin(b_path, exec);
@@ -142,9 +150,7 @@ int	fork_process(char *str, char **env, char *b_path)
 	if (pid == 0)
 		execve(total_path, args, env);
 	else if (pid > 0)
-	{
 		wait(NULL);
-	}	
 	else
 		ft_putstr("Error: Forking failed... \n");
 	return (0);
@@ -173,11 +179,11 @@ int	built_in(char *str, t_hlist **env_h)
 	if (equal_wspace(str, "cd ", 2))
 		return (cd(str, env_h));
 	if (equal_wspace(str, "setenv ", 6))
-		return (0);
+		return (set_env(str, env_h));
 	if (equal_wspace(str, "unsetenv ", 8))
-		return (0);
+		return (unset_env(str, env_h));
 	if (equal_wspace(str, "env ", 3))
-		return (1);
+		return (env_2(env_h));
 	if (equal_wspace(str, "exit ", 4) || equal_wspace(str, "quit ", 4))
 		exit(0);
 	return (0);
@@ -227,16 +233,40 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 void	free_env(t_hlist **env_h)
 {
 	int n;
+	t_hlist *temp;
+	t_hlist *last;
 
 	n = 0;
-	while (n < HASH_SIZE)
+	while (n < HASH_SIZE + 2)
 	{
-		while(env_h[n])
+		temp = env_h[n];
+		while(temp)
 		{
-			free(env_h[n]);
-			env_h[n] = env_h[n]->next;
+			last = temp;
+			temp = temp->next;
+			free_thlist(last);
+			last = NULL;
 		}
 		++n;
+	}
+}
+
+/* Testing function */
+
+void	clear_all_env_h(char **environ, t_hlist **env_h)
+{
+	int	n;
+	char	*ptr;
+	char	*str;
+
+	n = -1;
+	while (environ[++n])
+	{
+		ptr = ft_strchr(environ[n], '=');
+		*ptr = '\0';
+		str = ft_strjoin("unsetenv ", environ[n]);
+		unset_env(str, env_h);
+		*ptr = '=';
 	}
 }
 
@@ -244,10 +274,11 @@ int	main()
 {
 	char 		*line;
 	extern char 	**environ;
-	t_hlist		*env_h[HASH_SIZE] = { NULL };
+	t_hlist		*env_h[HASH_SIZE + 2] = { NULL };
 	int		i;
 
 	get_env(env_h, environ);
+	//clear_all_env_h(environ, env_h);
 	ft_putstr("$> ");
 	while ((i = get_next_line(0, &line)) > 0)
 	{

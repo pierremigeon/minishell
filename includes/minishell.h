@@ -16,8 +16,16 @@ typedef	struct		s_hlist
 	int		var_len;
 	int		con_len;
 	struct s_hlist 	*next;
+	struct s_hlist 	*next_2;
+	struct s_hlist	*last;
 }			t_hlist;
 
+//ENV BUILTINS MODULE
+int             env(t_hlist **env_h);
+int		env_2(t_hlist **env_h);
+int             set_env(char *str, t_hlist **env_h);
+void            free_thlist(t_hlist *node);
+int             unset_env(char *str, t_hlist **env_h);
 // ECHO MODULE
 void		putnendl(char *str, char c, int mode);
 char		get_ptr(char *str);
@@ -43,11 +51,13 @@ char		*get_val(t_hlist **env_h, char *str);
 char		*expand_command(char *str, t_hlist **env_h);
 //HASH TABLE MODULE
 t_hlist		*new_hash_node(char *env);
+t_hlist 	*new_hash_node_2(char *variable, char *contents);
 char 		*get_home(t_hlist **env_h);
 void		add_tilde(t_hlist **env_h);
 void		add_$(t_hlist **env_h);
 void		get_env(t_hlist	**env_h, char **env);
 void		test_hash_table(t_hlist **env_h);
-
+//FREE AND ERROR
+int		free_args(char **args);
 
 #endif
