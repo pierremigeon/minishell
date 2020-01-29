@@ -22,7 +22,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	len = 0;
 	len += ft_strlen(s1);
 	len += ft_strlen(s2);
-	if (!(merge = (char *)malloc(sizeof(char) * len)))
+	if (!(merge = (char *)malloc(sizeof(char) * ++len)))
 		return (NULL);
 	ft_strcpy(merge, s1);
 	ft_strcat(merge, s2);

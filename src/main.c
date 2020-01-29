@@ -84,6 +84,12 @@ char	*first_name(char *str)
 	return (out);
 }
 
+char *no_path_variable(char *program)
+{
+	free(program);
+	return (NULL);
+}
+
 char	*in_path(char *str, t_hlist **env_h)
 {
 	t_hlist *temp;
@@ -96,6 +102,8 @@ char	*in_path(char *str, t_hlist **env_h)
 	temp = env_h[get_key("PATH")];
 	while (temp && ft_strcmp(temp->var_name, "PATH"))
 		temp = temp->next;
+	if (!temp)
+		return (no_path_variable(program));
 	paths = ft_strsplit(temp->contents, ':');
 	while (paths[i])
 		if ((x = test_dir(program, paths[i++])))
@@ -225,16 +233,40 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 void	free_env(t_hlist **env_h)
 {
 	int n;
+	t_hlist *temp;
+	t_hlist *last;
 
 	n = 0;
-	while (n < HASH_SIZE)
+	while (n < HASH_SIZE + 2)
 	{
-		while(env_h[n])
+		temp = env_h[n];
+		while(temp)
 		{
-			free(env_h[n]);
-			env_h[n] = env_h[n]->next;
+			last = temp;
+			temp = temp->next;
+			free_thlist(last);
+			last = NULL;
 		}
 		++n;
+	}
+}
+
+/* Testing function */
+
+void	clear_all_env_h(char **environ, t_hlist **env_h)
+{
+	int	n;
+	char	*ptr;
+	char	*str;
+
+	n = -1;
+	while (environ[++n])
+	{
+		ptr = ft_strchr(environ[n], '=');
+		*ptr = '\0';
+		str = ft_strjoin("unsetenv ", environ[n]);
+		unset_env(str, env_h);
+		*ptr = '=';
 	}
 }
 
@@ -242,10 +274,11 @@ int	main()
 {
 	char 		*line;
 	extern char 	**environ;
-	t_hlist		*env_h[HASH_SIZE + 1] = { NULL };
+	t_hlist		*env_h[HASH_SIZE + 2] = { NULL };
 	int		i;
 
 	get_env(env_h, environ);
+	//clear_all_env_h(environ, env_h);
 	ft_putstr("$> ");
 	while ((i = get_next_line(0, &line)) > 0)
 	{

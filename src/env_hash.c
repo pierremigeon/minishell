@@ -8,15 +8,16 @@ t_hlist *new_hash_node_2(char *variable, char *contents)
 	t_hlist *new;
 	char *ptr;
 
-	if(!(new = (t_hlist *)malloc(sizeof(t_hlist))))
+	if(!(new = (t_hlist *)malloc(sizeof(t_hlist) * 1)))
 		exit(1);
-        new->var_name = ft_strdup(variable);
+	new->var_name = ft_strdup(variable);
 	new->var_len = ft_strlen(variable) + 1;
-        new->contents = ft_strdup(contents);
-        new->con_len = ft_strlen(contents);
-        new->next = NULL;
+	new->contents = ft_strdup(contents);
+	new->con_len = ft_strlen(contents);
+	new->next = NULL;
 	new->next_2 = NULL;
-        return (new);
+	new->last = NULL;
+	return (new);
 }
 
 t_hlist *new_hash_node(char *env)
@@ -24,7 +25,7 @@ t_hlist *new_hash_node(char *env)
 	t_hlist *new;
 	char *ptr;
 
-        if(!(new = (t_hlist *)malloc(sizeof(t_hlist))))
+        if(!(new = (t_hlist *)malloc(sizeof(t_hlist) * 1)))
 		exit(1);
 	ptr = ft_strchr(env, '=');
 	*ptr = '\0';
@@ -35,6 +36,7 @@ t_hlist *new_hash_node(char *env)
 	*ptr = '=';
 	new->next = NULL;
 	new->next_2 = NULL;
+	new->last = NULL;
 	return (new);
 }
 
@@ -68,7 +70,9 @@ void	add_tilde(t_hlist **env_h)
 	free(home);
 }
 
+/*
 //Figure out the casting stuff and test before deploying this function :)
+// i.e.: t_pid is signed int and size_t is unsigned int.
 void	add_$(t_hlist **env_h)
 {
 	t_hlist *temp;
@@ -81,7 +85,7 @@ void	add_$(t_hlist **env_h)
 	pid = ft_strjoin("$=", pid);
 	free(ptr);
         if (temp == NULL)
-                temp = new_hash_node(pid);
+        	temp = new_hash_node(pid);
         else    
         {       
                 while (temp->next)
@@ -90,6 +94,7 @@ void	add_$(t_hlist **env_h)
         }
         free(pid);
 }
+*/
 
 int	wrap_get_key(char *str)
 {
@@ -106,7 +111,7 @@ int	wrap_get_key(char *str)
 void	add_extras(t_hlist **env_h)
 {
 	add_tilde(env_h);
-	add_$(env_h);
+	//add_$(env_h);
 }
 
 void	make_links(t_hlist **last, t_hlist **temp)
@@ -115,7 +120,8 @@ void	make_links(t_hlist **last, t_hlist **temp)
 		*last = *temp;
 	else
 	{
-		(*last)->next = *temp;
+		(*last)->next_2 = *temp;
+		(*temp)->last = *last;
 		*last = (*last)->next_2;
 	}
 }
@@ -124,29 +130,29 @@ void	get_env(t_hlist	**env_h, char **env)
 {
 	int 	n;
 	int	key;
-	t_hlist *temp;
+	t_hlist *current;
 	t_hlist	*last = NULL;
 
 	n = -1;
-	env_h[HASH_SIZE] = env_h[wrap_get_key(env[0])];
 	while (env[++n])
 	{
 		key = wrap_get_key(env[n]);
-		if (env_h[key] == NULL)
+		if (!(current = env_h[key]))
 		{
 			env_h[key] = new_hash_node(env[n]);
-			temp = env_h[key];
+			current = env_h[key];
 		}
 		else
 		{
-			temp = env_h[key];
-			while (temp->next != NULL)
-				temp = temp->next;
-			temp->next = new_hash_node(env[n]);
-			temp = temp->next_2;
+			while (current->next != NULL)
+				current = current->next;
+			current->next = new_hash_node(env[n]);
+			current = current->next;
 		}
-		make_links(&last, &temp);
+		make_links(&last, &current);
 	}
+	env_h[HASH_SIZE] = env_h[wrap_get_key(env[0])];
+	env_h[HASH_SIZE + 1] = current;
 	add_extras(env_h);
 }
 

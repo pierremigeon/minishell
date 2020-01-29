@@ -17,6 +17,7 @@ typedef	struct		s_hlist
 	int		con_len;
 	struct s_hlist 	*next;
 	struct s_hlist 	*next_2;
+	struct s_hlist	*last;
 }			t_hlist;
 
 //ENV BUILTINS MODULE
