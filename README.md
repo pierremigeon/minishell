@@ -22,3 +22,30 @@ To check out my shell:
 6. If the command is not found, then an approriate error message is displayed.
 7. The prompt is again displayed and waits for input from the user.
 
+## Built-ins Usage:
+Built-ins run within the shell without forking a new process.
+
+1. echo:
+ 	echo [-n] [string ...] 
+	Description: prints string to standard out. Use -n to exclude the newline.
+2. cd:
+	cd [directory]
+	Description: changes current working directory to the specified directory. If no directory is specified, defaults to $HOME
+
+3. env:
+	env
+	Description: prints out environmental variable names and their values.
+
+4. setenv:
+	setenv [var_name] [value]
+	Description: set environmental variable. With no input, same as calling env.
+
+5. unsetenv:
+	unsetenv var_1_name [var_2_name ...]
+
+## Relevant Features:
+* Environmental Variables are stored in a hash table. The nodes for each of the variables includes information about the length of the variable name and its contents for the sake of memory allocation during $ and ~ expansions. In this way, the time it takes to locate the variable is reduced, and the time it takes to expand the variable is also reduced due to having previously calculated string lengths. Obviously, this is a pretty minor speed up unless you were to have substantially more variables with extremely long names / stored values. However, I enjoy building hash tables and playing with linked lists. The order of placement into the hash table is maintained by linking each node through a second *next pointer, which is iterated through by the env builtin. This forms a doubly linked list. Pointers to the head and tail of the doubly linked list are stored in the last two sots (respectively) of the lookup table, allowing addition of new nodes to the end of the list without list transversal. In cases that environmental variables are deleted using unsetenv, entries are found in the hash table via lookup, and node deletion from the ordered list is facilitated due to the doubly linked structure (tranversal of the list to find the prior and subsequent nodes not necessary).
+* The echo built-in generally matches the behavior of UNIX echo. That is, it takes the -n parameter, and it ignores quotes (single or double). In the case that string contains opening quotation marks that are unmatched by closing marks, echo will take multi-line input until a closing quotation mark is included. 
+
+
+

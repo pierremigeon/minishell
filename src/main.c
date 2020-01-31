@@ -274,7 +274,6 @@ int	main()
 	int		i;
 
 	get_env(env_h, environ);
-	clear_all_env_h(environ, env_h);
 	ft_putstr("$> ");
 	while ((i = get_next_line(0, &line)) > 0)
 	{
