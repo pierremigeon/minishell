@@ -23,30 +23,39 @@ To check out my shell:
 7. The prompt is again displayed and waits for input from the user.
 
 
-
 ## Built-ins Usage:
 Built-ins run within the shell without forking a new process.
 
-**echo** prints string to standard out. Use -n to exclude the newline.
+**echo** 
+
+prints string to standard out. Use -n to exclude the newline.
 
  `echo [-n] [string ...]`
 
 
-**cd** changes current working directory to the specified directory. If no directory is specified, defaults to $HOME
+**cd** 
+
+changes current working directory to the specified directory. If no directory is specified, defaults to $HOME
 
 `cd [directory]`
 
 
-**env** prints out environmental variable names and their values.
+**env** 
+
+prints out environmental variable names and their values.
 
 `env`
 
 
-**setenv** set environmental variable. With no input, same as calling env.
+**setenv** 
+
+set environmental variable. With no input, same as calling env.
 
 `setenv [var_name] [value]`
 
-**unsetenv** delete environmental variables. 
+**unsetenv** 
+
+delete environmental variables. 
 
 `unsetenv var_1_name [var_2_name ...]`
 
