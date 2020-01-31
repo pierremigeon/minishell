@@ -1,5 +1,6 @@
-
 #include "../includes/minishell.h"
+
+/* ECHO BUILTIN MODULE */
 
 void	putnendl(char *str, char c, int mode)
 {
@@ -56,7 +57,7 @@ void	echo_1(char *str, int n)
 		str1 = ft_strdup(str);
 		while (write(1, ">", 1) && ((i = get_next_line(0, &str2)) > 0))
 		{
-			str1 = ft_strjoin_free(str1, str2);
+			str1 = ft_strjoin_free(str1, str2, '\n');
 			free(str2);
 			if (q_balanced(str1, c))
 				break;

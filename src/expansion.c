@@ -1,6 +1,4 @@
-
-/* Handling Expansions Here */
-
+/* Expansions Module */
 #include "../includes/minishell.h"
 
 int	run_case_2(t_hlist **env_h)
@@ -86,7 +84,6 @@ int	is_signal(char *str)
 	return (0);
 }
 
-
 char	*get_val_tilde(t_hlist **env_h)
 {
 	t_hlist         *temp;
@@ -111,7 +108,7 @@ char	*get_val(t_hlist **env_h, char *str)
 		str++;
 		if (!(ptr = ft_strchr(str, ' ')) && (++i[0]))
 			if (!(ptr = ft_strchr(str, '/')) && (++i[0]))
-			ptr = ft_strchr(str, '\0');
+				ptr = ft_strchr(str, '\0');
 		*ptr = '\0';
 		temp = env_h[get_key(str)];
 		while (temp && (i[1] = ft_strcmp(temp->var_name, str)))
@@ -150,8 +147,7 @@ char	*expand_command(char *str, t_hlist **env_h)
 			while (*(str + x[0]) && *(str + x[0]) != ' ' && *(str + x[0]) != '/')
 				++x[0];
 		}
-		out[x[1]++] = *(str + x[0]);
-		++x[0];
+		out[x[1]++] = *(str + x[0]++);
 	}
 	out[x[1]] = '\0';
 	free(str);

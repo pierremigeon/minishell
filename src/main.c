@@ -30,7 +30,6 @@ int	free_args(char **args)
 	return (1);
 }
 
-
 char *free_all_ret_one(char **paths, char *program, int i)
 {
 	int x;
@@ -128,17 +127,13 @@ char	*get_total_path(char *b_path, char *exec)
 	}
 	else
 	{
-		ptr = b_path;
-		b_path = ft_strjoin(b_path, "/");
-		free(ptr);
-		out = ft_strjoin(b_path, exec);
-		free(b_path);
+		out = ft_strjoin_free(b_path, exec, '/');
 		return (out);
 	}
 	return (NULL);
 }
 
-int	fork_process(char *str, char **env, char *b_path)
+void	fork_process(char *str, char **env, char *b_path)
 {
 	pid_t	pid;
 	char	*total_path;
@@ -153,9 +148,11 @@ int	fork_process(char *str, char **env, char *b_path)
 		wait(NULL);
 	else
 		ft_putstr("Error: Forking failed... \n");
-	return (0);
+	free_args(args);
+	free(total_path);
 }
 
+//Make this... better 
 int	get_key(char *str)
 {
 	return (ft_strlen(str) % HASH_SIZE);
@@ -183,13 +180,11 @@ int	built_in(char *str, t_hlist **env_h)
 	if (equal_wspace(str, "unsetenv ", 8))
 		return (unset_env(str, env_h));
 	if (equal_wspace(str, "env ", 3))
-		return (env_2(env_h));
+		return (env(env_h));
 	if (equal_wspace(str, "exit ", 4) || equal_wspace(str, "quit ", 4))
 		exit(0);
 	return (0);
 }
-
-/* Main Flow control */
 
 int	expandable(char *str)
 {
@@ -267,6 +262,7 @@ void	clear_all_env_h(char **environ, t_hlist **env_h)
 		str = ft_strjoin("unsetenv ", environ[n]);
 		unset_env(str, env_h);
 		*ptr = '=';
+		free(str);
 	}
 }
 
@@ -278,7 +274,7 @@ int	main()
 	int		i;
 
 	get_env(env_h, environ);
-	//clear_all_env_h(environ, env_h);
+	clear_all_env_h(environ, env_h);
 	ft_putstr("$> ");
 	while ((i = get_next_line(0, &line)) > 0)
 	{

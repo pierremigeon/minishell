@@ -70,31 +70,30 @@ void	add_tilde(t_hlist **env_h)
 	free(home);
 }
 
-/*
-//Figure out the casting stuff and test before deploying this function :)
-// i.e.: t_pid is signed int and size_t is unsigned int.
 void	add_$(t_hlist **env_h)
 {
 	t_hlist *temp;
 	char 	*pid;
-	char	*ptr;
+	char	*ptr;	
+	char 	*dollar;
 
+	dollar = ft_strnew(1);
+	ft_strcpy(dollar, "$");
 	pid = ft_itoa((size_t)getpid());
 	ptr = pid;
-	temp = env_h[get_key(pid)];
-	pid = ft_strjoin("$=", pid);
-	free(ptr);
+	pid = ft_strjoin_free(dollar, pid, '=');
+	temp = env_h[get_key("$")];
         if (temp == NULL)
         	temp = new_hash_node(pid);
-        else    
-        {       
-                while (temp->next)
-                        temp = temp->next;
-                temp->next = new_hash_node(pid);
+        else
+        {   
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new_hash_node(pid);
         }
         free(pid);
+	free(ptr);
 }
-*/
 
 int	wrap_get_key(char *str)
 {
@@ -111,7 +110,7 @@ int	wrap_get_key(char *str)
 void	add_extras(t_hlist **env_h)
 {
 	add_tilde(env_h);
-	//add_$(env_h);
+	add_$(env_h);
 }
 
 void	make_links(t_hlist **last, t_hlist **temp)

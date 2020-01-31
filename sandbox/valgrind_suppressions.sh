@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-
 #executable name
 if [ $# == 1 ]; then
     NAME=$1
@@ -51,7 +50,7 @@ fi
 
 #use valgrind again, with the suppressions file
 if [ -a $NAME ]; then
-    $VALGRIND --suppressions=./$SUPFILE ./$NAME
+    $VALGRIND --leak-check=full --suppressions=./$SUPFILE ./$NAME
 else
     echo $NAME not found
 fi

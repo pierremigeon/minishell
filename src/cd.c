@@ -1,7 +1,6 @@
-
 #include "../includes/minishell.h"
 
-/* CD module */
+/* CD BUILTIN MODULE */
 
 void	cd_error(char *str)
 {

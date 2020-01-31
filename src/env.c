@@ -1,7 +1,8 @@
 #include "../includes/minishell.h"
 
+/* ENV, SETENV AND UNSETENV BUILTINS MODULE */
 
-int	env_2(t_hlist **env_h)
+int	env(t_hlist **env_h)
 {
 	t_hlist *temp;
 
@@ -12,27 +13,6 @@ int	env_2(t_hlist **env_h)
 		ft_putchar('=');
 		ft_putendl(temp->contents);
 		temp = temp->next_2;
-	}
-	return (1);
-}
-
-int	env(t_hlist **env_h)
-{
-	int 	n;
-	t_hlist *temp;
-
-	n = 0;
-	while (n < HASH_SIZE)
-	{
-		temp = env_h[n];
-		while (temp)
-		{
-			ft_putstr(temp->var_name);
-			ft_putchar('=');
-			ft_putendl(temp->contents);
-			temp = temp->next;
-		}
-		++n;
 	}
 	return (1);
 }
