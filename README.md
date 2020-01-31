@@ -28,36 +28,37 @@ Built-ins run within the shell without forking a new process.
 
 **echo** 
 
-prints string to standard out. Use -n to exclude the newline.
-
  `echo [-n] [string ...]`
+
+prints string to standard out. Use -n to exclude the newline.
 
 
 **cd** 
 
-changes current working directory to the specified directory. If no directory is specified, defaults to $HOME
-
 `cd [directory]`
+
+changes current working directory to the specified directory. If no directory is specified, defaults to $HOME
 
 
 **env** 
 
-prints out environmental variable names and their values.
-
 `env`
+
+prints out environmental variable names and their values.
 
 
 **setenv** 
 
+`setenv [var_name] [value]`
+
 set environmental variable. With no input, same as calling env.
 
-`setenv [var_name] [value]`
 
 **unsetenv** 
 
-delete environmental variables. 
-
 `unsetenv var_1_name [var_2_name ...]`
+
+delete environmental variables. 
 
 
 ## Relevant Features:
