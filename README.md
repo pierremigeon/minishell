@@ -28,23 +28,33 @@ To check out my shell:
 Built-ins run within the shell without forking a new process.
 
 **echo**
+
  `echo [-n] [string ...]`
+
 Description: prints string to standard out. Use -n to exclude the newline.
 
 **cd**
+
 `cd [directory]`
+
 Description: changes current working directory to the specified directory. If no directory is specified, defaults to $HOME
 
 **env**
+
 `env`
+
 Description: prints out environmental variable names and their values.
 
 **setenv**
+
 `setenv [var_name] [value]`
+
 Description: set environmental variable. With no input, same as calling env.
 
 **unsetenv**
+
 `unsetenv var_1_name [var_2_name ...]`
+
 Description: delete environmental variable. 
 
 ## Relevant Features:
