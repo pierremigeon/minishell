@@ -89,7 +89,7 @@ int		get_next_line(const int fd, char **line)
 	buf[fd] = ft_strchr(buf[fd], '\n')
 		? ft_strdup(ft_strchr(buf[fd], '\n') + 1) : NULL;
 	free(ptr2);
-	if (bits_read == 0 && buf[fd] == '\0' && !*line)
+	if (bits_read == 0 && buf[fd] == (void *)0 && !*line)
 		return (0);
 	if (!*line)
 		line[0] = ft_strnew(0);
