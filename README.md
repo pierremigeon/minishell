@@ -1,4 +1,7 @@
 
+I've decided to start adding some new features to this, mostly for kicks and giggles. However in doing so, I've discovered that having a newer compiler seems to have broken the shell a bit, and so I will also be doing a lot of troubleshooting and debugging to get it back in standard working order!
+
+
 # Pierre's Minishell Project
 
 ### As Beautiful as a Shell...
