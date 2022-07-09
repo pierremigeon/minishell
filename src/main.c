@@ -266,6 +266,14 @@ void	clear_all_env_h(char **environ, t_hlist **env_h)
 	}
 }
 
+
+
+void	clear_terminal_at_start(t_hlist **env_h, char **environ) 
+{
+	char *str = "clear";
+	run_command(&str, env_h, environ);
+}
+
 int	main()
 {
 	char 		*line;
@@ -274,6 +282,7 @@ int	main()
 	int		i;
 
 	get_env(env_h, environ);
+	clear_terminal_at_start(env_h, environ);
 	ft_putstr("$> ");
 	while ((i = get_next_line(0, &line)) > 0)
 	{
