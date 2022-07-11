@@ -205,6 +205,8 @@ int	expandable(char *str)
 		if ((ptr = ft_strchr(str, '~')))
 			if (*(ptr + 1) == '/' || *(ptr + 1) == ' ' || *(ptr + 1) == '\0')
 				return (1);
+		if (ptr && ptr && *(ptr + 1) == *ptr)
+			return(0);
 		str = (ptr) ? ptr + 1 : ptr;
 	}
 	return (0);
