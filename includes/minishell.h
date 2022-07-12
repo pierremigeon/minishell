@@ -45,7 +45,7 @@ int		run_case_1(t_hlist **env_h, char *str, int *len);
 int		case_1(char *str);
 int		length_of_out(char *str, t_hlist **env_h);
 char		*trim_end(char *str);
-int		is_signal(char *str);
+int		is_signal(char *str, int i);
 char		*get_val_tilde(t_hlist **env_h);
 char		*get_val(t_hlist **env_h, char *str);
 char		*expand_command(char *str, t_hlist **env_h);

@@ -75,11 +75,12 @@ char *trim_end(char *str)
 	return (str);
 }
 
-int	is_signal(char *str)
+int	is_signal(char *str, int i)
 {
-	if (*str == '~')
-		return (1);
-	if (*str == '$' && (*(str + 1) != ' ' && *(str + 1) != '\0'))
+	if (*(str + i) == '~' && (*(str + i + 1) == ' ' || *(str + i + 1) == '\0' || *(str + i + 1) == '/' ))
+		if (i > 0 && *(str + i - 1) == ' ' || i == 0)
+			return (1);
+	if (*(str + i) == '$' && (*(str + i +  1) != ' ' && *(str + i + 1) != '\0'))
 		return (1);
 	return (0);
 }
@@ -139,7 +140,7 @@ char	*expand_command(char *str, t_hlist **env_h)
 		++x[0];
 	while (*(str + x[0]))
 	{
-		if (is_signal(str + x[0]))
+		if (is_signal(str, x[0]))
 		{
 			new_s = get_val(env_h, str + x[0]);
 			while (new_s && *new_s)
