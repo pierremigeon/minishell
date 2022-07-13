@@ -266,8 +266,6 @@ void	clear_all_env_h(char **environ, t_hlist **env_h)
 	}
 }
 
-
-
 void	clear_terminal_at_start(t_hlist **env_h, char **environ) 
 {
 	char *str = "clear";
