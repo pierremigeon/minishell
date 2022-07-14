@@ -29,16 +29,36 @@ const char *get_tilde(t_hlist **env_h)
 	return ((const char *)env_h[key]->contents);
 }
 
-int	cd(char *str, t_hlist **env_h)
+char	*trim_end2(char *str) 
+{
+	char *ptr;
+
+	ptr = ft_strchr(str, ' ');
+	if (ptr)
+		*ptr = '\0';
+	return(str);
+}
+
+char	*trim_begin(char *str)
 {
 	while (*str == ' ')
 		str++;
 	str += 2;
 	while (*str == ' ')
 		str++;
-	if (!*str)
+	return str;
+}
+
+
+int	cd(char *str, t_hlist **env_h)
+{
+	str = trim_begin(str);
+	if (!*str) {
 		chdir(get_tilde(env_h));
-	else if(chdir((const char *)str))
+		return(1);
+	}
+	str = trim_end(str);
+	if(chdir((const char *)str))
 		cd_error(str);
 	return (1);
 }

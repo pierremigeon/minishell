@@ -32,6 +32,15 @@ edit:
 edit_h:
 	vi ./includes/minishell.h
 
+clang:
+	@clang $(SRC) $(LIB) -o $(OUT)
+	@chmod +x ./$(OUT)
+	@cp ./$(OUT) /usr/local/bin/$(OUT)
+
+clangtest:
+	@clang -g $(SRC) $(LIB) -o $(OUT)
+	lldb ./minishell
+
 clean:
 	@echo "Cleaning up files"
 	@rm ./$(OUT)

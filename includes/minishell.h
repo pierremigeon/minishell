@@ -8,6 +8,7 @@
 #include "../libft/libft.h"
 #include <sys/wait.h>
 #include <dirent.h>
+#include <stdio.h>
 
 typedef	struct		s_hlist
 {
@@ -36,6 +37,8 @@ int		echo_0(char *str);
 void		cd_error(char *str);
 const char 	*get_tilde(t_hlist **env_h);
 int		cd(char *str, t_hlist **env_h);
+char    	*trim_begin(char *str);
+char    	*trim_end2(char *str);
 // 
 int		get_key(char *str);
 void		read_error(void);
