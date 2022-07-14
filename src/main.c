@@ -53,6 +53,8 @@ int	test_dir(char *prog, char *path)
 	DIR 		*dirp;
 	struct dirent	*dp;
 
+	if (ft_strcmp(".", prog) == 0 || ft_strcmp("..", prog) == 0)
+		return (0);
 	if (!(dirp = opendir(path)))
 		return (0);
 	while ((dp = readdir(dirp)))
@@ -152,7 +154,6 @@ void	fork_process(char *str, char **env, char *b_path)
 	free(total_path);
 }
 
-//Make this... better 
 int	get_key(char *str)
 {
 	return (ft_strlen(str) % HASH_SIZE);
@@ -216,7 +217,7 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 {
 	char *exec_path;
 
-	if (expandable(*str))
+	if (expandable(*str)) 
 		*str = expand_command(*str, env_h);
 	if (!(built_in(*str, env_h)))
 	{
@@ -247,28 +248,6 @@ void	free_env(t_hlist **env_h)
 		++n;
 	}
 }
-
-/* Testing function */
-
-void	clear_all_env_h(char **environ, t_hlist **env_h)
-{
-	int	n;
-	char	*ptr;
-	char	*str;
-
-	n = -1;
-	while (environ[++n])
-	{
-		ptr = ft_strchr(environ[n], '=');
-		*ptr = '\0';
-		str = ft_strjoin("unsetenv ", environ[n]);
-		unset_env(str, env_h);
-		*ptr = '=';
-		free(str);
-	}
-}
-
-
 
 void	clear_terminal_at_start(t_hlist **env_h, char **environ) 
 {
