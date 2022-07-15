@@ -187,20 +187,27 @@ int	built_in(char *str, t_hlist **env_h)
 	return (0);
 }
 
-int	expandable(char *str)
+int	expandable_sigil(char *str)
 {
 	char *ptr;
-	char *ptr2;
+	char *start;
 
-	ptr2 = str;
+	start = str;
 	while (str && *str)
 	{
 		if ((ptr = ft_strchr(str, '$')))
 			if (*(ptr + 1) != ' ')
-				return (1);
+				if (ptr != start && *(ptr - 1) != 92 || ptr == start) 
+					return (1);
 		str = (ptr) ? ptr + 1 : ptr;
 	}
-	str = ptr2;
+	return (0);
+}
+
+int	expandable_tilde(char *str)
+{
+	char *ptr;
+
 	while (str && *str)
 	{
 		if ((ptr = ft_strchr(str, '~')))
@@ -211,6 +218,11 @@ int	expandable(char *str)
 		str = (ptr) ? ptr + 1 : ptr;
 	}
 	return (0);
+}
+
+int	expandable(char *str)
+{
+	return (expandable_sigil(str) || expandable_tilde(str));
 }
 
 void	run_command(char **str, t_hlist **env_h, char **environ)
@@ -224,7 +236,7 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 		if ((exec_path = in_path(*str, env_h)))
 			fork_process(*str, environ, exec_path);
 		else
-			 no_such_command(*str);
+			no_such_command(*str);
 	}
 }
 

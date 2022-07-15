@@ -81,7 +81,7 @@ int	is_signal(char *str, int i)
 		if (i > 0 && *(str + i - 1) == ' ' || i == 0)
 			return (1);
 	if (*(str + i) == '$' && (*(str + i +  1) != ' ' && *(str + i + 1) != '\0'))
-		return (1);
+			return (1);
 	return (0);
 }
 

@@ -1,0 +1,13 @@
+
+*~~~~~~~~~~~env~~~~~~~~~~~~~*
+
+*~~~~~~~~~~~cd~~~~~~~~~~~~~*
+
+*~~~~~~~~~~~echo~~~~~~~~~~~~~*
+echo \
+echo \\
+echo \$PATH
+echo \$PWD
+echo \$$
+echo         hey      \n
+echo  hey       hey         \n

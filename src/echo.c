@@ -21,10 +21,12 @@ char	get_ptr(char *str)
 	char *ptr1;
 	char *ptr2;
 
-	ptr1 = ft_strchr(str, '\'');
+	ptr1 = ft_strchr(str, 92);
 	ptr2 = ft_strchr(str, '"');
-	if (ptr1 && ptr2)
+	if (ptr1 && ptr2) {
+		printf("going to go with it\n");
 		return ((ptr1 < ptr2) ? *ptr1 : *ptr2);
+	}
 	return ((ptr1) ? *ptr1 : *ptr2);
 }
 
