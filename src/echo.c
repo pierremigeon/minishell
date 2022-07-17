@@ -2,7 +2,9 @@
 
 /* ECHO BUILTIN MODULE */
 
-void	putnendl(char *str, char c, int mode)
+
+// Here you want to put the entire string to print into the write function and print it in one go to avoid constant system calls as seen here.
+void	putnendl(char *str, char c, int mode, int *counts[3])
 {
 	while (*str == ' ')
         	str++;
@@ -16,64 +18,94 @@ void	putnendl(char *str, char c, int mode)
 		write(1, "\n", 1);
 }
 
-char	get_ptr(char *str)
+int	q_balanced(char *str, char c, int *counts[3])
 {
-	char *ptr1;
-	char *ptr2;
-
-	ptr1 = ft_strchr(str, 92);
-	ptr2 = ft_strchr(str, '"');
-	if (ptr1 && ptr2) {
-		printf("going to go with it\n");
-		return ((ptr1 < ptr2) ? *ptr1 : *ptr2);
-	}
-	return ((ptr1) ? *ptr1 : *ptr2);
-}
-
-int	q_balanced(char *str, char c)
-{
-	int count;
-
-	count = 0;
-	while (*str)
-	{
-		if (*str == c)
-			count++;
-		str++;
-	}
-	return ((count + 1) % 2);
-}
-
-void	echo_1(char *str, int n)
-{
-	char *str1, *str2;
-	char c;
 	int	i;
+	int	original;
 
-	i = 0;
-	c = get_ptr(str);
-	if (q_balanced(str, c))
-		putnendl(str, c, n);
+	i  = 0;
+	original = *counts[1];
+	while (*(str + i))
+	{
+		if (*(str + i) == c)
+			*counts[1] += 1;
+		i++;
+	}
+	*counts[0] += i;
+	if (c == 92)
+		return ((*counts[1] == original) || (*counts[1] + 1) % 2);
+	return ((*counts[1] + 1) % 2);
+}
+
+void    assign_pointers(int     *counts[3])
+{
+	int i = 0;
+
+	while (i < 3)
+	{
+		if(!(counts[i] = (int *)malloc(sizeof(int) * 1)))
+			exit(1);
+		*counts[i] = 0;
+		++i;
+	}
+}
+
+void	echo_1(char *str, int n, char c)
+{
+	char	*strs[2];
+	int	*counts[3];
+
+	assign_pointers(counts);
+	if (q_balanced(str, c, counts))
+		putnendl(str, c, n, counts);
 	else
 	{
-		str1 = ft_strdup(str);
-		while (write(1, ">", 1) && ((i = get_next_line(0, &str2)) > 0))
+		strs[0] = ft_strdup(str);
+		while (write(1, ">", 1) && ((*counts[2] = get_next_line(0, &strs[1])) > 0))
 		{
-			str1 = ft_strjoin_free(str1, str2, '\n');
-			free(str2);
-			if (q_balanced(str1, c))
+			strs[0] = ft_strjoin_free(strs[0], strs[1], '\n');
+			if ((q_balanced(strs[1], c, counts)))
+			{
+				free(strs[1]);
 				break;
+			}
+			free(strs[1]);
 		}
-		putnendl(str1, c, n);
-		free(str1);
+		putnendl(strs[0], c, n, counts);
+		free(strs[0]);
 	}
-	if (i == -1)			
+	if (*counts[2] == -1)			
 		read_error();
+}
+
+char	check_quotes(char *o_str)
+{
+	char *str[3] = { NULL };
+
+	str[0] = ft_strchr(o_str, 39);
+	str[1] = ft_strchr(o_str, 34);
+	str[2] = ft_strchr(o_str, 92);
+	while (str[0] && *str[0] && str[0] > o_str && *(str[0] - 1) == '\\')
+		str[0] = ft_strchr(++str[0], '\'');
+	while (str[1] && *str[1] && str[1] > o_str && *(str[1] - 1) == '\\')
+		str[1] = ft_strchr(++str[1], '\"');
+	while (str[2] && *str[2] && str[2] > o_str && *(str[2] - 1) == '\\')
+		str[2] = ft_strchr(++str[2], '\\');
+	if (str[0] && str[1])
+		str[0] = (str[0] < str[1]) ? str[0] : str[1];
+	else if (str[1])
+		str[0] = str[1];
+	else if (str[2] && !str[0] && !str[1] && *(str[2] + 1) == '\0')
+		return (*str[2]);
+	if (str[0])
+		return (*str[0]);
+	return (0);
 }
 
 int	echo_0(char *str)
 {
 	int 	n;
+	char	c;
 
 	n = 0;
 	while (*str == ' ')
@@ -88,11 +120,11 @@ int	echo_0(char *str)
 			str += 3;
 		}
 	}
-	if ((ft_strchr(str, '\'')) || (ft_strchr(str, '"')))
-		echo_1(str, n);
-	else if (n)
-		putnendl(str, 0, n);
-	else
-		putnendl(str, 0, n);
+	if ((c = check_quotes(str)))
+		echo_1(str, n, c);
+//	else if (n)
+//		putnendl(str, 0, n);
+//	else
+//		putnendl(str, 0, n);
 	return (1);
 }

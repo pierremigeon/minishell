@@ -201,6 +201,7 @@ int	expandable_sigil(char *str)
 					return (1);
 		str = (ptr) ? ptr + 1 : ptr;
 	}
+	str = start;
 	return (0);
 }
 

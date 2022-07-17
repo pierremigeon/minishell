@@ -29,6 +29,9 @@ rt: test runtest
 edit:
 	vi ./src/main.c
 
+edit_e:
+	vi ./src/echo.c
+
 edit_h:
 	vi ./includes/minishell.h
 

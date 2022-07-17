@@ -28,10 +28,10 @@ int             set_env(char *str, t_hlist **env_h);
 void            free_thlist(t_hlist *node);
 int             unset_env(char *str, t_hlist **env_h);
 // ECHO MODULE
-void		putnendl(char *str, char c, int mode);
-char		get_ptr(char *str);
-int		q_balanced(char *str, char c);
-void		echo_1(char *str, int n);
+void		putnendl(char *str, char c, int mode, int *counts[3]);
+int		q_balanced(char *str, char c, int *counts[3]);
+void		echo_1(char *str, int n, char c);
+char		check_quotes(char *o_str);
 int		echo_0(char *str);
 // CD MODULE
 void		cd_error(char *str);
