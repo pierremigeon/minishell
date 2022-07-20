@@ -21,6 +21,10 @@ typedef	struct		s_hlist
 	struct s_hlist	*last;
 }			t_hlist;
 
+//main Module
+void		trim_end3(char **str);
+
+
 //ENV BUILTINS MODULE
 int             env(t_hlist **env_h);
 int		env_2(t_hlist **env_h);
@@ -38,7 +42,6 @@ void		cd_error(char *str);
 const char 	*get_tilde(t_hlist **env_h);
 int		cd(char *str, t_hlist **env_h);
 char    	*trim_begin(char *str);
-char    	*trim_end2(char *str);
 // 
 int		get_key(char *str);
 void		read_error(void);

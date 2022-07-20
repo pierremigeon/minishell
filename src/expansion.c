@@ -65,16 +65,6 @@ int	length_of_out(char *str, t_hlist **env_h)
 	return (len[0] + len[1]);
 }
 
-char *trim_end(char *str)
-{
-	int	len;
-
-	len = ft_strlen(str) - 1;
-	while (str[len] == ' ')
-		str[len--] = '\0';
-	return (str);
-}
-
 int	is_signal(char *str, int i)
 {
 	if (*(str + i) == '~' && (*(str + i + 1) == ' ' || *(str + i + 1) == '\0' || *(str + i + 1) == '/' ))
@@ -132,7 +122,7 @@ char	*expand_command(char *str, t_hlist **env_h)
 	char	*new_s = NULL;
 	int	x[2] = { 0 };
 
-	x[0] = length_of_out(trim_end(str), env_h);
+	x[0] = length_of_out(str, env_h);
 	if(!(out = (char *)malloc(sizeof(char) * ++x[0])))
 		exit(1);
 	x[0] = 0;

@@ -1,13 +1,48 @@
 
 *~~~~~~~~~~~env~~~~~~~~~~~~~*
+env && cd .. && env 
+env && cd && env
+
+*~~~~~~~~~~~setenv~~~~~~~~~~~~~*
+setenv word='newvalue'
+setenv PWD='nonsensepath'
+
+*~~~~~~~~~~~unsetenv~~~~~~~~~~~~~*
+unsetenv PWD
 
 *~~~~~~~~~~~cd~~~~~~~~~~~~~*
+cd
+cd " "
+cd ..
+^cd ..  $
+cd .
+^cd .   $
+
+cd 
+pwd
+cd " "
+pwd
+cd ..
+pwd
+^cd ..  $
+pwd
+cd .
+pwd
+^cd .   $
+pwd
 
 *~~~~~~~~~~~echo~~~~~~~~~~~~~*
 echo \
 echo \\
 echo \$PATH
 echo \$PWD
+echo $$
 echo \$$
-echo         hey      \n
-echo  hey       hey         \n
+echo         hey      
+echo  hey       hey         
+echo "hey"               "hey"
+echo \\    "hello"
+echo \\ \\
+echo \\\\
+echo ''
+echo ''''

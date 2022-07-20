@@ -226,10 +226,22 @@ int	expandable(char *str)
 	return (expandable_sigil(str) || expandable_tilde(str));
 }
 
+void	trim_end3(char **str)
+{
+	int	i;
+
+	i = ft_strlen(*str) - 1;
+	while (i > 1 && *(*(str) + i) == ' ' && *(*(str) + i - 1) == ' ') 
+		--i;
+	if (*(*(str) + i) == ' ')
+		*(*(str) + i) = '\0';
+}
+
 void	run_command(char **str, t_hlist **env_h, char **environ)
 {
 	char *exec_path;
 
+	trim_end3(str);
 	if (expandable(*str)) 
 		*str = expand_command(*str, env_h);
 	if (!(built_in(*str, env_h)))

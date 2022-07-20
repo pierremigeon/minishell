@@ -31,16 +31,6 @@ const char *get_tilde(t_hlist **env_h)
 	return ((const char *)ptr->contents);
 }
 
-char	*trim_end2(char *str) 
-{
-	char *ptr;
-
-	ptr = ft_strchr(str, ' ');
-	if (ptr)
-		*ptr = '\0';
-	return(str);
-}
-
 char	*trim_begin(char *str)
 {
 	while (*str == ' ')
@@ -58,7 +48,6 @@ int	cd(char *str, t_hlist **env_h)
 		chdir(get_tilde(env_h));
 		return(1);
 	}
-	str = trim_end(str);
 	if(chdir((const char *)str))
 		cd_error(str);
 	return (1);

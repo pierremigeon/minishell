@@ -2,18 +2,35 @@
 
 /* ECHO BUILTIN MODULE */
 
+char	*trim_escape(char *str, char c, int mode, int *counts[3])
+{
+	char 	*str_copy;
+	int	i;
+	int	i2;
+	
+	i = 0;
+	i2 = 0;
+	if (!(str_copy = (char *)malloc(sizeof(char) * *counts[0])))
+		exit(1);
+	while (*(str + i))
+	{
+		if (*(str + i) != c || *(str + i - 1) == '\'')
+			if (*(str + i) != '\n' || *(str + i - 1) != '\'')
+				*(str_copy + i2++) = *(str + i);
+		i++;
+	}
+	*(str_copy + i2) = '\0';
+	*counts[0] = i2 + 1;
+	return str_copy;
+}
 
-// Here you want to put the entire string to print into the write function and print it in one go to avoid constant system calls as seen here.
 void	putnendl(char *str, char c, int mode, int *counts[3])
 {
-	while (*str == ' ')
-        	str++;
-	while (*str)
-	{
-		if (*str != c)
-			write(1, str, 1);
-		str++;
-	}
+	while (*str == ' ' && str++)
+		*counts[0] -= 1;
+	str = trim_escape(str, c, mode, counts);
+	//str = remove_gaps();
+	write(1, str, *counts[0]);
 	if (mode == 0)
 		write(1, "\n", 1);
 }
@@ -93,7 +110,7 @@ char	check_quotes(char *o_str)
 		str[2] = ft_strchr(++str[2], '\\');
 	if (str[0] && str[1])
 		str[0] = (str[0] < str[1]) ? str[0] : str[1];
-	else if (str[1])
+	else if (str[1]) 
 		str[0] = str[1];
 	else if (str[2] && !str[0] && !str[1] && *(str[2] + 1) == '\0')
 		return (*str[2]);
@@ -104,10 +121,10 @@ char	check_quotes(char *o_str)
 
 int	echo_0(char *str)
 {
-	int 	n;
+	int 	*counts[3];
 	char	c;
 
-	n = 0;
+	assign_pointers(counts);
 	while (*str == ' ')
 		str++;
 	str += 4;
@@ -116,15 +133,13 @@ int	echo_0(char *str)
 		str++;
 		if (*str == '-' && *(str + 1) == 'n' && (*(str + 2) == ' '|| *(str + 2) == '\0'))
 		{
-			n = 1;
+			*counts[2] = 1;
 			str += 3;
 		}
 	}
 	if ((c = check_quotes(str)))
-		echo_1(str, n, c);
-//	else if (n)
-//		putnendl(str, 0, n);
-//	else
-//		putnendl(str, 0, n);
+		echo_1(str, *counts[2], c);
+	else
+		putnendl(str, 0, *counts[2], counts);
 	return (1);
 }
