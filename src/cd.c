@@ -43,11 +43,15 @@ char	*trim_begin(char *str)
 
 int	cd(char *str, t_hlist **env_h)
 {
+	char *tmp;
+
 	str = trim_begin(str);
 	if (!*str) {
 		chdir(get_tilde(env_h));
 		return(1);
 	}
+	if ((tmp = ft_strchr(str, ' ')))
+		*tmp = '\0';
 	if(chdir((const char *)str))
 		cd_error(str);
 	return (1);

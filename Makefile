@@ -32,6 +32,9 @@ edit:
 edit_e:
 	vi ./src/echo.c
 
+edit_c:
+	vi ./src/cd.c	
+
 edit_h:
 	vi ./includes/minishell.h
 
