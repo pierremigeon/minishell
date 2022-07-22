@@ -2,25 +2,69 @@
 
 /* ECHO BUILTIN MODULE */
 
+void    assign_pointers(int     *counts[3])
+{
+	int i = 0;
+
+	while (i < 3)
+	{
+		if(!(counts[i] = (int *)malloc(sizeof(int) * 1)))
+			exit(1);
+		*counts[i] = 0;
+		++i;
+	}
+}
+
+//this will be a bit-twiddling based function in the future
+int	iterate_ints(int *counts[3], int flag, char **str)
+{
+	*counts[0] = 1;
+	if (flag == 1)
+		(*str)++;
+	else if (flag == 2)
+		*counts[flag - 1] += 1;
+	else if (flag == 3)
+	{
+		*counts[flag - 2] += 1;
+		(*str)++;
+	}
+	else if (flag == 4)
+		*counts[flag - 2] += 1;
+	else if (flag == 5)
+	{
+		(*str)++;
+		*counts[2] += 1;
+	}
+	else if (flag == 6)
+	{
+		*counts[1] += 1;
+		*counts[2] += 1;
+	}
+	return (1);
+}
+
 char	*trim_escape(char *str, char c, int mode, int *counts[3])
 {
 	char 	*str_copy;
-	int	i;
-	int	i2;
-	
-	i = 0;
-	i2 = 0;
+	int	*iterator[3];
+
+	assign_pointers(iterator);
 	if (!(str_copy = (char *)malloc(sizeof(char) * *counts[0])))
 		exit(1);
-	while (*(str + i))
+	while (*str)
 	{
-		if (*(str + i) != c || *(str + i - 1) == '\'')
-			if (*(str + i) != '\n' || *(str + i - 1) != '\'')
-				*(str_copy + i2++) = *(str + i);
-		i++;
+		while (*str == c && (*iterator[0] == 0 || *(str - 1) != '\\'))
+			iterate_ints(iterator, 5, &str);
+		if (*str == ' ' && (iterate_ints(iterator, 3, &str)))
+			*(str_copy + *iterator[1] - 1) = *(str - 1);
+		while ((*iterator[2] + 1 % 2) && *(str) == ' ')
+			iterate_ints(iterator, 1, &str);
+		if (*str != c || (*iterator[0] != 0 && *(str - 1) == '\\'))
+			if (*str != '\\' && (iterate_ints(iterator, 2, &str)))
+				*(str_copy + *iterator[1] - 1) = *str;
+		(*str != '\0') ? ++str : 0;
 	}
-	*(str_copy + i2) = '\0';
-	*counts[0] = i2 + 1;
+	*counts[0] = *iterator[1] - 1;
 	return str_copy;
 }
 
@@ -29,10 +73,10 @@ void	putnendl(char *str, char c, int mode, int *counts[3])
 	while (*str == ' ' && str++)
 		*counts[0] -= 1;
 	str = trim_escape(str, c, mode, counts);
-	//str = remove_gaps();
 	write(1, str, *counts[0]);
 	if (mode == 0)
 		write(1, "\n", 1);
+	free(str);
 }
 
 int	q_balanced(char *str, char c, int *counts[3])
@@ -52,19 +96,6 @@ int	q_balanced(char *str, char c, int *counts[3])
 	if (c == 92)
 		return ((*counts[1] == original) || (*counts[1] + 1) % 2);
 	return ((*counts[1] + 1) % 2);
-}
-
-void    assign_pointers(int     *counts[3])
-{
-	int i = 0;
-
-	while (i < 3)
-	{
-		if(!(counts[i] = (int *)malloc(sizeof(int) * 1)))
-			exit(1);
-		*counts[i] = 0;
-		++i;
-	}
 }
 
 void	echo_1(char *str, int n, char c)

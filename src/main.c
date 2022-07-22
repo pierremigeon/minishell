@@ -233,7 +233,7 @@ void	trim_end3(char **str)
 	i = ft_strlen(*str) - 1;
 	while (i > 1 && *(*(str) + i) == ' ' && *(*(str) + i - 1) == ' ') 
 		--i;
-	if (*(*(str) + i) == ' ')
+	if (*(*(str) + i) == ' ' && *(*(str) + i - 1) != '\\')
 		*(*(str) + i) = '\0';
 }
 
