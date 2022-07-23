@@ -64,7 +64,7 @@ char	*trim_escape(char *str, char c, int mode, int *counts[3])
 				*(str_copy + *iterator[1] - 1) = *str;
 		(*str != '\0') ? ++str : 0;
 	}
-	*counts[0] = *iterator[1] - 1;
+	*counts[0] = *iterator[1];
 	return str_copy;
 }
 
@@ -171,6 +171,9 @@ int	echo_0(char *str)
 	if ((c = check_quotes(str)))
 		echo_1(str, *counts[2], c);
 	else
+	{
+		*counts[0] = ft_strlen(str) + 1;
 		putnendl(str, 0, *counts[2], counts);
+	}
 	return (1);
 }

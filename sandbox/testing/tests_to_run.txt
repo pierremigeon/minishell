@@ -11,38 +11,47 @@ setenv PWD='nonsensepath'
 unsetenv PWD
 
 *~~~~~~~~~~~cd~~~~~~~~~~~~~*
-cd
-cd " "
-cd ..
-^cd ..  $
-cd .
-^cd .   $
+[x] cd
+[*]cd " "
+[x] cd ..
+[x] ^cd ..  $
+[x] cd .
+[x] ^cd .   $
 
-cd 
-pwd
-cd " "
-pwd
-cd ..
-pwd
-^cd ..  $
-pwd
-cd .
-pwd
-^cd .   $
-pwd
+[x] cd 
+[x] pwd
+[*]cd " "
+[x] pwd
+[x] cd ..
+[x] pwd
+[x] ^cd ..  $
+[x] pwd
+[x] cd .
+[x] pwd
+[x] ^cd .   $
+[x] pwd
 
 *~~~~~~~~~~~echo~~~~~~~~~~~~~*
-echo \
-echo \\
-echo \$PATH
-echo \$PWD
-echo $$
-echo \$$
-echo         hey      
-echo  hey       hey         
-echo "hey"               "hey"
-echo \\    "hello"
-echo \\ \\
-echo \\\\
-echo ''
-echo ''''
+[x] echo \
+[*] echo \\
+[x] echo \$PATH
+[x] echo \$PWD
+[x] echo $$
+[*] echo \$$
+[x] echo -n     "hey"       "these"         "spaces"    "are gone"                  $
+[x] echo         hey      
+[x] echo  hey       hey         
+[x] echo "hey"               "hey"
+[x] echo "word"        "word"        "word"            "word"              "word"         "word" "word"        "word"        "word"
+[*] echo \\    "hello"
+[*] echo \\ \\
+[*] echo \\\\
+[x] echo ''
+[x] echo ''''
+[*] echo "\"
+[*] echo '\'
+[*] echo "\""
+[*] echo '\''
+
+
+
