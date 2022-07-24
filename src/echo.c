@@ -43,6 +43,13 @@ int	iterate_ints(int *counts[3], int flag, char **str)
 	return (1);
 }
 
+int	test_newline(char *str, int locus)
+{
+	if (*str != '\n' || ((locus > 0 && *(str - 1) != '\\') || locus == 0))
+		return(1);
+	return (0);
+}
+
 char	*trim_escape(char *str, char c, int mode, int *counts[3])
 {
 	char 	*str_copy;
@@ -61,7 +68,8 @@ char	*trim_escape(char *str, char c, int mode, int *counts[3])
 			iterate_ints(iterator, 1, &str);
 		if (*str != c || (*iterator[0] != 0 && *(str - 1) == '\\'))
 			if (*str != '\\' && (iterate_ints(iterator, 2, &str)))
-				*(str_copy + *iterator[1] - 1) = *str;
+				if (test_newline(str, *iterator[0]))
+					*(str_copy + *iterator[1] - 1) = *str;
 		(*str != '\0') ? ++str : 0;
 	}
 	*counts[0] = *iterator[1];
@@ -94,7 +102,7 @@ int	q_balanced(char *str, char c, int *counts[3])
 	}
 	*counts[0] += i;
 	if (c == 92)
-		return ((*counts[1] == original) || (*counts[1] + 1) % 2);
+		return ((*counts[1] == original));
 	return ((*counts[1] + 1) % 2);
 }
 

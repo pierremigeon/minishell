@@ -67,10 +67,12 @@ int	length_of_out(char *str, t_hlist **env_h)
 
 int	is_signal(char *str, int i)
 {
-	if (*(str + i) == '~' && (*(str + i + 1) == ' ' || *(str + i + 1) == '\0' || *(str + i + 1) == '/' ))
-		if (i > 0 && *(str + i - 1) == ' ' || i == 0)
-			return (1);
-	if (*(str + i) == '$' && (*(str + i +  1) != ' ' && *(str + i + 1) != '\0'))
+	if (*(str + i) == '~') 
+		if (*(str + i + 1) == ' ' || *(str + i + 1) == '\0' || *(str + i + 1) == '/' )
+			if (i > 0 && *(str + i - 1) == ' ' || i == 0)
+				return (1);
+	if (*(str + i) == '$' && (i > 0 && *(str + i - 1) != '\\' || i == 0))
+		if (*(str + i +  1) != ' ' && *(str + i + 1) != '\0')
 			return (1);
 	return (0);
 }

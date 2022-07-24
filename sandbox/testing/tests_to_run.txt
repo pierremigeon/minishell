@@ -20,7 +20,7 @@ unsetenv PWD
 
 [x] cd 
 [x] pwd
-[*]cd " "
+[*] cd " "
 [x] pwd
 [x] cd ..
 [x] pwd
@@ -35,9 +35,11 @@ unsetenv PWD
 [x] echo \
 [*] echo \\
 [x] echo \$PATH
+[x] echo p$PATH
 [x] echo \$PWD
+[x] echo p\$PWD
 [x] echo $$
-[*] echo \$$
+[x] echo \$$
 [x] echo -n     "hey"       "these"         "spaces"    "are gone"                  $
 [x] echo         hey      
 [x] echo  hey       hey         
@@ -52,6 +54,3 @@ unsetenv PWD
 [*] echo '\'
 [*] echo "\""
 [*] echo '\''
-
-
-
