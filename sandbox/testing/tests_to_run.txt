@@ -39,6 +39,7 @@
 [x] echo p$PATH
 [x] echo \$PWD
 [x] echo p\$PWD
+[*] $PWD			(If doesn't cause error, try multiple times)
 [x] echo $$
 [x] echo \$$
 [x] echo -n     "hey"       "these"         "spaces"    "are gone"                  $

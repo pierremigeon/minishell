@@ -15,31 +15,16 @@ void    assign_pointers(int     *counts[3])
 	}
 }
 
-//this will be a bit-twiddling based function in the future
 int	iterate_ints(int *counts[3], int flag, char **str)
 {
 	*counts[0] = 1;
-	if (flag == 1)
+
+	if ((flag + 1) % 2)
 		(*str)++;
-	else if (flag == 2)
-		*counts[flag - 1] += 1;
-	else if (flag == 3)
-	{
-		*counts[flag - 2] += 1;
-		(*str)++;
-	}
-	else if (flag == 4)
-		*counts[flag - 2] += 1;
-	else if (flag == 5)
-	{
-		(*str)++;
-		*counts[2] += 1;
-	}
-	else if (flag == 6)
-	{
+	if (flag == 1 || flag == 2 || flag == 5)
 		*counts[1] += 1;
+	if (flag == 3 || flag == 4 || flag == 5)
 		*counts[2] += 1;
-	}
 	return (1);
 }
 
@@ -72,14 +57,14 @@ char	*trim_escape(char *str, char c, int mode, int *counts[3])
 	while (*str)
 	{
 		while (*str == '\\' && (*iterator[0] == 0 || *(str - 1) != '\\'))
-			iterate_ints(iterator, 5, &str);
-		if (*str == ' ' && (iterate_ints(iterator, 3, &str)))
+			iterate_ints(iterator, 4, &str);
+		if (*str == ' ' && (iterate_ints(iterator, 2, &str)))
 			*(str_copy + *iterator[1] - 1) = *(str - 1);
 		while ((*iterator[2] + 1 % 2) && *(str) == ' ')
-			iterate_ints(iterator, 1, &str);
+			iterate_ints(iterator, 0, &str);
 		if (bs_t(str, c, *iterator[0]))
 			if (t_newl(str, *iterator[0]) && (*iterator[0] = 1))
-				if (iterate_ints(iterator, 2, &str))			
+				if (iterate_ints(iterator, 1, &str))
 					*(str_copy + *iterator[1] - 1) = *str;
 		(*str != '\0') ? ++str : 0;
 	}
@@ -95,7 +80,7 @@ void	putnendl(char *str, char c, int mode, int *counts[3])
 	write(1, str, *counts[0]);
 	if (mode == 0)
 		write(1, "\n", 1);
-	free(str);
+	free (str);
 }
 
 int	q_balanced(char *str, char c, int *counts[3])
@@ -133,13 +118,13 @@ void	echo_1(char *str, int n, char c)
 			strs[0] = ft_strjoin_free(strs[0], strs[1], '\n');
 			if ((q_balanced(strs[1], c, counts)))
 			{
-				free(strs[1]);
+				free (strs[1]);
 				break;
 			}
-			free(strs[1]);
+			free (strs[1]);
 		}
 		putnendl(strs[0], c, n, counts);
-		free(strs[0]);
+		free (strs[0]);
 	}
 	if (*counts[2] == -1)			
 		read_error();
