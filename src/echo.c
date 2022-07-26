@@ -43,10 +43,21 @@ int	iterate_ints(int *counts[3], int flag, char **str)
 	return (1);
 }
 
-int	test_newline(char *str, int locus)
+int	t_newl(char *str, int locus)
 {
 	if (*str != '\n' || ((locus > 0 && *(str - 1) != '\\') || locus == 0))
 		return(1);
+	return (0);
+}
+
+int	bs_t(char *str, char c, int locus)
+{
+	if (*str == '\\' && locus > 0 && *(str - 1) == '\\')
+		return (1);
+	if (*str == c && locus > 0 && *(str - 1) == '\\')
+		return (1);
+	if (*str != c && *str != '\\')
+		return (1);
 	return (0);
 }
 
@@ -60,15 +71,15 @@ char	*trim_escape(char *str, char c, int mode, int *counts[3])
 		exit(1);
 	while (*str)
 	{
-		while (*str == c && (*iterator[0] == 0 || *(str - 1) != '\\'))
+		while (*str == '\\' && (*iterator[0] == 0 || *(str - 1) != '\\'))
 			iterate_ints(iterator, 5, &str);
 		if (*str == ' ' && (iterate_ints(iterator, 3, &str)))
 			*(str_copy + *iterator[1] - 1) = *(str - 1);
 		while ((*iterator[2] + 1 % 2) && *(str) == ' ')
 			iterate_ints(iterator, 1, &str);
-		if (*str != c || (*iterator[0] != 0 && *(str - 1) == '\\'))
-			if (*str != '\\' && (iterate_ints(iterator, 2, &str)))
-				if (test_newline(str, *iterator[0]))
+		if (bs_t(str, c, *iterator[0]))
+			if (t_newl(str, *iterator[0]) && (*iterator[0] = 1))
+				if (iterate_ints(iterator, 2, &str))			
 					*(str_copy + *iterator[1] - 1) = *str;
 		(*str != '\0') ? ++str : 0;
 	}
@@ -90,10 +101,10 @@ void	putnendl(char *str, char c, int mode, int *counts[3])
 int	q_balanced(char *str, char c, int *counts[3])
 {
 	int	i;
-	int	original;
+	int	orig;
 
 	i  = 0;
-	original = *counts[1];
+	orig = *counts[1];
 	while (*(str + i))
 	{
 		if (*(str + i) == c)
@@ -102,7 +113,7 @@ int	q_balanced(char *str, char c, int *counts[3])
 	}
 	*counts[0] += i;
 	if (c == 92)
-		return ((*counts[1] == original));
+		return (*counts[1] == orig || i > 0 && *(str + i - 1) != '\\');
 	return ((*counts[1] + 1) % 2);
 }
 
