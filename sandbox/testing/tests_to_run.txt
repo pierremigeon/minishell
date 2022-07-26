@@ -1,18 +1,19 @@
 
 *~~~~~~~~~~~env~~~~~~~~~~~~~*
-env && cd .. && env 
-env && cd && env
+[*] env && cd .. && env 
+[*] env && cd && env
 
 *~~~~~~~~~~~setenv~~~~~~~~~~~~~*
-setenv word='newvalue'
-setenv PWD='nonsensepath'
+[*] setenv word='newvalue'
+[*] setenv PWD='nonsensepath'
 
 *~~~~~~~~~~~unsetenv~~~~~~~~~~~~~*
-unsetenv PWD
+[*] unsetenv word='newvalue'
+[*] unsetenv PWD
 
 *~~~~~~~~~~~cd~~~~~~~~~~~~~*
 [x] cd
-[*]cd " "
+[*] cd " "
 [x] cd ..
 [x] ^cd ..  $
 [x] cd .
@@ -33,7 +34,7 @@ unsetenv PWD
 
 *~~~~~~~~~~~echo~~~~~~~~~~~~~*
 [x] echo \
-[*] echo \\
+[x] echo \\
 [x] echo \$PATH
 [x] echo p$PATH
 [x] echo \$PWD
@@ -45,8 +46,8 @@ unsetenv PWD
 [x] echo  hey       hey         
 [x] echo "hey"               "hey"
 [x] echo "word"        "word"        "word"            "word"              "word"         "word" "word"        "word"        "word"
-[*] echo \\    "hello"
-[*] echo \\ \\
+[x] echo \\    "hello"
+[x] echo \\ \\
 [*] echo \\\\
 [x] echo ''
 [x] echo ''''
