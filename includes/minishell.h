@@ -23,7 +23,7 @@ typedef	struct		s_hlist
 
 //main Module
 void		trim_end3(char **str);
-
+int     	check_balance(char *str);
 
 //ENV BUILTINS MODULE
 int             env(t_hlist **env_h);
@@ -32,17 +32,19 @@ int             set_env(char *str, t_hlist **env_h);
 void            free_thlist(t_hlist *node);
 int             unset_env(char *str, t_hlist **env_h);
 // ECHO MODULE
-void		putnendl(char *str, char c, int mode, int *counts[3]);
-int		q_balanced(char *str, char c, int *counts[3]);
-void		echo_1(char *str, int n, char c);
-char		check_quotes(char *o_str);
+void		putnendl(char *str, char *c, int mode, int *counts[3]);
+int		q_balanced(char *str, char *c, int *counts[3]);
+void		echo_1(char *str, int n, char *c);
+char		*check_quotes(char *o_str);
 int		echo_0(char *str);
 // CD MODULE
 void		cd_error(char *str);
 const char 	*get_tilde(t_hlist **env_h);
 int		cd(char *str, t_hlist **env_h);
 char    	*trim_begin(char *str);
-// 
+void		assign_pointers(int *counts[3]);
+int		r_cbs(char *o_str, char *str);
+//
 int		get_key(char *str);
 void		read_error(void);
 // COMMAND EXPANSION MODULE

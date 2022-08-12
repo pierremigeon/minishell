@@ -72,18 +72,18 @@ char	*trim_escape(char *str, char c, int mode, int *counts[3])
 	return str_copy;
 }
 
-void	putnendl(char *str, char c, int mode, int *counts[3])
+void	putnendl(char *str, char *c, int mode, int *counts[3])
 {
 	while (*str == ' ' && str++)
 		*counts[0] -= 1;
-	str = trim_escape(str, c, mode, counts);
+	str = trim_escape(str, *c, mode, counts);
 	write(1, str, *counts[0]);
 	if (mode == 0)
 		write(1, "\n", 1);
 	free (str);
 }
 
-int	q_balanced(char *str, char c, int *counts[3])
+int	q_balanced(char *str, char *c, int *counts[3])
 {
 	int	i;
 	int	orig;
@@ -92,17 +92,17 @@ int	q_balanced(char *str, char c, int *counts[3])
 	orig = *counts[1];
 	while (*(str + i))
 	{
-		if (*(str + i) == c)
+		if (*(str + i) == *c)
 			*counts[1] += 1;
 		i++;
 	}
 	*counts[0] += i;
-	if (c == 92)
+	if (*(c + 1) == 92)
 		return (*counts[1] == orig || i > 0 && *(str + i - 1) != '\\');
 	return ((*counts[1] + 1) % 2);
 }
 
-void	echo_1(char *str, int n, char c)
+void	echo_1(char *str, int n, char *c)
 {
 	char	*strs[2];
 	int	*counts[3];
@@ -130,34 +130,47 @@ void	echo_1(char *str, int n, char c)
 		read_error();
 }
 
-char	check_quotes(char *o_str)
+int	r_cbs(char *o_str, char *str)
 {
-	char *str[3] = { NULL };
+	int 	i;
 
+	i = 1;
+	while ((str - i + 1) != o_str && *(str - i) == '\\')
+		++i;
+	return (i > 1 && (i + 1) % 2);
+}
+
+char	*check_quotes(char *o_str)
+{
+	char	*str[3] = { NULL };
+	char	*out;
+
+	out = ft_strnew(2);
 	str[0] = ft_strchr(o_str, 39);
 	str[1] = ft_strchr(o_str, 34);
-	str[2] = ft_strchr(o_str, 92);
+	str[2] = ft_strrchr(o_str, '\\');
+	if (str[2] && *str[2])
+		if(*(str[2] + 1) != '\0' || r_cbs(o_str, str[2]))
+			str[2] = NULL;
 	while (str[0] && *str[0] && str[0] > o_str && *(str[0] - 1) == '\\')
 		str[0] = ft_strchr(++str[0], '\'');
 	while (str[1] && *str[1] && str[1] > o_str && *(str[1] - 1) == '\\')
 		str[1] = ft_strchr(++str[1], '\"');
-	while (str[2] && *str[2] && str[2] > o_str && *(str[2] - 1) == '\\')
-		str[2] = ft_strchr(++str[2], '\\');
 	if (str[0] && str[1])
 		str[0] = (str[0] < str[1]) ? str[0] : str[1];
-	else if (str[1]) 
+	else if (str[1])
 		str[0] = str[1];
-	else if (str[2] && !str[0] && !str[1] && *(str[2] + 1) == '\0')
-		return (*str[2]);
 	if (str[0])
-		return (*str[0]);
-	return (0);
+		out[0] = *str[0];
+	if (str[2])
+		out[1] = *str[2];
+	return (out);
 }
 
 int	echo_0(char *str)
 {
 	int 	*counts[3];
-	char	c;
+	char	*c;
 
 	assign_pointers(counts);
 	while (*str == ' ')
@@ -172,12 +185,13 @@ int	echo_0(char *str)
 			str += 3;
 		}
 	}
-	if ((c = check_quotes(str)))
+	if ((c = check_quotes(str)) && (*c || *(c + 1)))
 		echo_1(str, *counts[2], c);
 	else
 	{
 		*counts[0] = ft_strlen(str) + 1;
 		putnendl(str, 0, *counts[2], counts);
 	}
+	free (c);
 	return (1);
 }

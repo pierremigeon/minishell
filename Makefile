@@ -47,6 +47,10 @@ clangtest:
 	@clang -g $(SRC) $(LIB) -o $(OUT)
 	lldb ./minishell
 
+run: all
+	@./minishell	
+
+
 clean:
 	@echo "Cleaning up files"
 	@rm ./$(OUT)

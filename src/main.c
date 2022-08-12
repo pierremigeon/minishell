@@ -226,13 +226,37 @@ int	expandable(char *str)
 	return (expandable_sigil(str) || expandable_tilde(str));
 }
 
+int	check_balance(char *str)
+{
+	char	*c;
+	char	*p1;
+	char    *p2;
+
+	while(str && *str)
+	{
+		c = check_quotes(str);
+		p1 = ft_strchr(str, *c);
+		p2 = ft_strchr(p1 + 1, *c);
+		str = (p2 && *p2) ? p2 + 1: p2;
+		if (p1 && p2 == NULL)
+			return (0);
+	}
+	return (*c);
+}
+
 void	trim_end3(char **str)
 {
 	int	i;
+	char	*c;
 
+	if (!(check_balance(*str)))
+		return ;
 	i = ft_strlen(*str) - 1;
-	while (i > 1 && *(*(str) + i) == ' ' && *(*(str) + i - 1) == ' ') 
-		--i;
+	while (i > 1 && *(*(str) + i) == ' ' && *(*(str) + i - 1) == ' ')
+		*(*(str) + i--) = '\0';
+	if (*(*(str) + i) == ' ' && *(*(str) + i - 1) == '\\')
+		if (r_cbs(*str, (*(str) + i - 1)))
+			*(*(str) + i) = '\0';
 	if (*(*(str) + i) == ' ' && *(*(str) + i - 1) != '\\')
 		*(*(str) + i) = '\0';
 }

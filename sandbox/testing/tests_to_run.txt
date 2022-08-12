@@ -13,24 +13,48 @@
 
 *~~~~~~~~~~~cd~~~~~~~~~~~~~*
 [x] cd
-[*] cd " "
+[x] cd    $
+[x] ^    cd     $
+[*] cd " "   ---> this one almost works, but it trims too much of the space on the error message return
 [x] cd ..
 [x] ^cd ..  $
 [x] cd .
-[x] ^cd .   $
-
-[x] cd 
-[x] pwd
-[*] cd " "
-[x] pwd
-[x] cd ..
-[x] pwd
-[x] ^cd ..  $
-[x] pwd
-[x] cd .
-[x] pwd
-[x] ^cd .   $
-[x] pwd
+[x] ^cd    .$
+[x] ^cd    .     $
+[x] cd \$
+[x] cd \\$
+[x] cd \\\$
+[x] cd \\\\$
+[x] cd \\\\\$
+[x] cd \ $
+[x] cd \ \ $
+[x] cd \ \ \ $
+[x] cd \ \ \$
+[x] cd ".."".."
+[x] cd ".."'..'
+[x] cd ".."'..'".."
+[*] cd ".."'..'".."\
+[*] cd ".."'..'".."\\
+[*] cd ".."'..'".."\\\
+[*] cd \ ".."'..'".."
+[x] cd \\ ".."'..'".."
+[*] cd \\\ ".."'..'".."
+[x] cd "..
+[x] cd "..'
+[x] cd '..
+[x] cd \"..
+[*] cd ~$$~
+[*] cd \
+>\
+>\
+>
+[*] cd \
+>\ "
+>
+>"
+>
+[*] cd lol\words laghter \$
+[x] cd l\l
 
 *~~~~~~~~~~~echo~~~~~~~~~~~~~*
 [x] echo \
@@ -56,3 +80,11 @@
 [*] echo '\'
 [*] echo "\""
 [*] echo '\''
+[*] echo "word"'word'
+[*] echo ".."".."
+[*] echo ~$$~
+[*] echo a$$a
+[*] echo \\$$\\
+
+
+
