@@ -179,14 +179,18 @@ char    *copy_coding(char *str)
 
 void	set_c(char *str, char *c, int i)
 {
-	if (*c && i > 0)
-		if (*(str + i - 1) == '\"' || *(str + i - 1) == '\'')
-			if (!bcheck(str, i - 1))
-				*c = '\0';
+	if (c[1] && *(str + i - 1) == *c)
+		if (!bcheck(str, i - 1))
+		{
+			*c = '\0';
+			c[1] = '\0';
+		}
 	if (*(str + i) == '\"' || *(str + i) == '\'')
-		if (!(*c))
-			if (!bcheck(str, i))
-				*c = *(str + i);
+		if (c[0] && !bcheck(str, i))
+			c[1] = *(str + i);
+	if (*(str + i) == '\"' || *(str + i) == '\'')
+		if (!c[0] && !bcheck(str, i))
+			c[0] = *(str + i);
 }
 
 char	*str_rmc(char *str, char *c)
