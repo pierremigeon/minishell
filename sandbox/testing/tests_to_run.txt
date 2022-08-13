@@ -14,7 +14,10 @@
 [x] cd
 [x] cd    $
 [x] ^    cd     $
-[*] cd " "   ---> this one almost works, but it trims too much of the space on the error message return
+[x] cd ""
+[*] cd " "
+[*] cd "  "
+[*] cd "   "
 [x] cd ..
 [x] ^cd ..  $
 [x] cd .
@@ -53,7 +56,10 @@
 >"
 >
 [*] cd lol\words laghter \$
+[*] cd "lol\words laghter \"$
 [x] cd l\l
+[x] cd "l\l"
+[x] cd "these\are\words'and'yes"
 [x] cd "
 >'
 >'

@@ -179,18 +179,22 @@ char    *copy_coding(char *str)
 
 void	set_c(char *str, char *c, int i)
 {
-	if (c[1] && *(str + i - 1) == *c)
-		if (!bcheck(str, i - 1))
-		{
-			*c = '\0';
-			c[1] = '\0';
-		}
+	if (c[1] && (c[1] == '\"' || c[1] == '\'')) 
+		if (i > 0 && *(str + i - 1) == *c)
+			if (!bcheck(str, i - 1))
+			{
+				*c = '\0';
+				c[1] = '\0';
+			}
 	if (*(str + i) == '\"' || *(str + i) == '\'')
 		if (c[0] && !bcheck(str, i))
 			c[1] = *(str + i);
 	if (*(str + i) == '\"' || *(str + i) == '\'')
 		if (!c[0] && !bcheck(str, i))
 			c[0] = *(str + i);
+	if (*(str + i) != '\"' && *(str + i) != '\'')
+		if (c[0] && !c[1])
+			c[1] = *(str + i);
 }
 
 char	*str_rmc(char *str, char *c)
@@ -207,17 +211,22 @@ char	*str_rmc(char *str, char *c)
 	while (*(str + i) && (!(bscount = 0)))
 	{
 		set_c(str, c, i);
-		if (*(str + i) == '\\')
-			bscount = count_bs(str + i);
-		if (bscount == 1)
-			new_str = copy_coding(new_str);
-		i += bscount;
-		while(*(str + i) && *(str + i) == '\\')
+		if (!c[0] || !c[1] || c[0] == c[1])
+		{
+			if (*(str + i) == '\\')
+				bscount = count_bs(str + i);
+			if (bscount == 1)
+				new_str = copy_coding(new_str);
+			i += bscount;
+			while(*(str + i) && *(str + i) == '\\')
+				*(new_str++) = *(str + i++);
+			if (*(str + i) && (*(str + i) != *c || bcheck(str, i)))
+				*(new_str++) = *(str + i++);
+			else if (*(str + i))
+				++i;
+		}
+		else if (c[0] && c[0] != c[1]) 
 			*(new_str++) = *(str + i++);
-		if (*(str + i) && (*(str + i) != *c || bcheck(str, i)))
-			*(new_str++) = *(str + i++);
-		else if (*(str + i))
-			++i;
 	}
 	return (start);
 }
