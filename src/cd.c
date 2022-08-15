@@ -35,9 +35,9 @@ char	*edit_bs(char *str)
 	char	*new;
 	int	count;
 
-	while (*str == ' ')
-		str++;
 	new = str;
+	while (*new == ' ')
+		new++;
 	while ((new = ft_strchr(new + 1, ' ')))
 		if (rev_not_code(str, new) && *(new + 1))
 			break;
@@ -95,6 +95,17 @@ int	bcheck(char *str, int i)
 		++x;
 	return ((x + 1) % 2);
 }
+
+int	bcheck2(char *str, int i)
+{
+	int x;
+
+	x = 0;
+	while (i-- > 0 && *(str-- - 1) == '\\')
+		++x;
+	return (x % 2);
+}
+
 
 int	check_balanced(char *str, char *c)
 {
@@ -240,7 +251,7 @@ char	**allocate_pointers(char *str)
 	if (!(out = (char **)malloc(sizeof(char *) * 3)))
 		exit (1);
 	while (i < 3)
-		*(out + i++) = NULL;
+		*(out + i++) = str;
 	return (out);	
 }
 
@@ -258,19 +269,22 @@ char	*trim_begin(char *str)
 	char	**out;
 	char	*c;
 
-	out = allocate_pointers(str);
 	trim_start(&str);
-	out[0] = str;
+	out = allocate_pointers(str);
 	while(str && *str)
 	{
-		c = check_quotes(str);
-		out[1] = ft_strchr(str, *c);
-		out[2] = ft_strchr((*(out + 1) + 1), *c);
-		str = (out[2] && *out[2]) ? out[2] + 1: out[2];
-		if (c[1] || out[1] && out[2] == NULL)
+		while (out[1] && out[2] && *str)
+		{
+			c = check_quotes(str);
+			out[1] = ft_strchr(str, *c);
+			out[2] = ft_strchr((*(out + 1) + 1), *c);
+			while (out[2] && bcheck2(out[2], out[2] - out[0]))
+				out[2] = ft_strchr((*(out + 2) + 1), *c);
+			str = (out[2] && *out[2]) ? out[2] + 1: out[2];
+		}
+		if (out[1] && out[2] == NULL || c[1])
 			out[0] = multiline(*out, c);
-		if (!str || !*str)
-			out[0] = str_rmc(out[0], c);
+		out[0] = str_rmc(out[0], c);
 	}
 	str = out[0];
 	free(out);

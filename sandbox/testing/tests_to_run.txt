@@ -15,9 +15,18 @@
 [x] cd    $
 [x] ^    cd     $
 [x] cd ""
-[*] cd " "
-[*] cd "  "
-[*] cd "   "
+[x] cd " "
+[x] cd "  "
+[x] cd "   "
+[X] cd "   word"
+[x] cd "x" "y"
+[x] cd "x"  "y"
+[x] cd "x"   "y"
+[x] cd "p\p"
+[x] cd " p\p "
+[*] cd "\"      --> Just editing wrong now
+[*] cd "\" "	--> Just editing wrong now
+[*] cd "\"''"   --> Just editing wrong now
 [x] cd ..
 [x] ^cd ..  $
 [x] cd .
@@ -35,9 +44,10 @@
 [x] cd ".."".."
 [x] cd ".."'..'
 [x] cd ".."'..'".."
-[*] cd ".."'..'".."\
-[*] cd ".."'..'".."\\
-[*] cd ".."'..'".."\\\
+[x] cd ".."\
+[*] cd ".."'..'".."\	--> Just editing wrong now
+[*] cd ".."'..'".."\\	--> Just editing wrong now
+[x] cd ".."'..'".."\\\
 [*] cd \ ".."'..'".."
 [x] cd \\ ".."'..'".."
 [*] cd \\\ ".."'..'".."
