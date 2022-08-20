@@ -241,7 +241,7 @@ int	check_balance(char *str)
 		if (p1 && p2 == NULL)
 			return (0);
 	}
-	return (*c);
+	return (1);
 }
 
 void	trim_end3(char **str)

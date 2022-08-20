@@ -93,7 +93,7 @@ int	bcheck(char *str, int i)
 		return (0);
 	while (i > 0 && *(str + i--) == '\\')
 		++x;
-	return ((x + 1) % 2);
+	return (x % 2);
 }
 
 int	bcheck2(char *str, int i)
@@ -197,15 +197,25 @@ void	set_c(char *str, char *c, int i)
 				*c = '\0';
 				c[1] = '\0';
 			}
+	if (*(str + i) != '\"' && *(str + i) != '\'' && c[0])
+		c[1] = *(str + i);
 	if (*(str + i) == '\"' || *(str + i) == '\'')
 		if (c[0] && !bcheck(str, i))
 			c[1] = *(str + i);
 	if (*(str + i) == '\"' || *(str + i) == '\'')
 		if (!c[0] && !bcheck(str, i))
 			c[0] = *(str + i);
-	if (*(str + i) != '\"' && *(str + i) != '\'')
-		if (c[0] && !c[1])
-			c[1] = *(str + i);
+}
+
+char	*set_pointers(char **str, char **start, char **c, int *i)
+{
+	char    *new_str;
+
+	*i = 0;
+	new_str = ft_strnew(3 * count_single_bs(*str) + ft_strlen(*str) + 1);
+	*start = new_str;
+	ft_bzero(*c,3);
+	return (new_str);
 }
 
 char	*str_rmc(char *str, char *c)
@@ -215,14 +225,11 @@ char	*str_rmc(char *str, char *c)
 	int	i;
 	int	bscount;
 
-	i = 0;
-	new_str = ft_strnew(3 * count_single_bs(str) + ft_strlen(str) + 1);
-	start = new_str;
-	ft_bzero(c,3);
+	new_str = set_pointers(&str, &start, &c, &i);
 	while (*(str + i) && (!(bscount = 0)))
 	{
 		set_c(str, c, i);
-		if (!c[0] || !c[1] || c[0] == c[1])
+		if (!c[0] || c[0] && c[1] && c[0] == c[1])
 		{
 			if (*(str + i) == '\\')
 				bscount = count_bs(str + i);
@@ -232,12 +239,12 @@ char	*str_rmc(char *str, char *c)
 			while(*(str + i) && *(str + i) == '\\')
 				*(new_str++) = *(str + i++);
 			if (*(str + i) && (*(str + i) != *c || bcheck(str, i)))
-				*(new_str++) = *(str + i++);
-			else if (*(str + i))
-				++i;
+				*(new_str++) = *(str + i);
 		}
-		else if (c[0] && c[0] != c[1]) 
-			*(new_str++) = *(str + i++);
+		else if (c[0] && c[1] && c[0] != c[1])
+			if (*(str + i) != '\\' || *(str + i + 1) != '\"')
+				*(new_str++) = *(str + i);
+		++i;
 	}
 	return (start);
 }
@@ -295,6 +302,7 @@ int	cd(char *str, t_hlist **env_h)
 {
 	char *tmp;
 
+	printf("str is %s\n", str);
 	str = trim_begin(str);
 	tmp = edit_bs(str);
 	if (!*str || !*tmp) {

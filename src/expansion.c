@@ -90,6 +90,23 @@ char	*get_val_tilde(t_hlist **env_h)
 	return (NULL);
 }
 
+char	*get_val2(t_hlist **env_h, char *str)
+{
+	char 		save;
+	t_hlist		*temp;
+	int		i;
+
+	save = *(str + 1);
+	*(str + 1) = '\0';
+	temp = env_h[get_key(str)];
+	while (temp && (i = ft_strcmp(temp->var_name, str)))
+		temp = temp->next;
+	*(str + 1) = save;
+	if (temp && i == 0)
+		return (temp->contents);
+	return (NULL);
+}
+
 char	*get_val(t_hlist **env_h, char *str)
 {
 	char 		*ptr = NULL;
@@ -99,6 +116,8 @@ char	*get_val(t_hlist **env_h, char *str)
 	if (*str == '$')
 	{
 		str++;
+		if (*str == '$')
+			return (get_val2(env_h, str));
 		if (!(ptr = ft_strchr(str, ' ')) && (++i[0]))
 			if (!(ptr = ft_strchr(str, '/')) && (++i[0]))
 				ptr = ft_strchr(str, '\0');
@@ -113,9 +132,8 @@ char	*get_val(t_hlist **env_h, char *str)
 		if (temp && i[1] == 0)
 			return (temp->contents);
 		return (NULL);
-	}
-	else 
-		return (get_val_tilde(env_h));
+	} 
+	return (get_val_tilde(env_h));
 }
 
 char	*expand_command(char *str, t_hlist **env_h)
@@ -124,10 +142,7 @@ char	*expand_command(char *str, t_hlist **env_h)
 	char	*new_s = NULL;
 	int	x[2] = { 0 };
 
-	x[0] = length_of_out(str, env_h);
-	if(!(out = (char *)malloc(sizeof(char) * ++x[0])))
-		exit(1);
-	x[0] = 0;
+	out = ft_strnew(length_of_out(str, env_h));
 	while (*(str + x[0]) == ' ')
 		++x[0];
 	while (*(str + x[0]))
@@ -137,10 +152,13 @@ char	*expand_command(char *str, t_hlist **env_h)
 			new_s = get_val(env_h, str + x[0]);
 			while (new_s && *new_s)
 				out[x[1]++] = *new_s++;
-			while (*(str + x[0]) && *(str + x[0]) != ' ' && *(str + x[0]) != '/')
+			if (*(str + x[0]) == '$' && *(str + x[0] + 1) == '$')
+				x[0] += 2;	
+			else while (*(str + x[0]) && *(str + x[0]) != ' ' && *(str + x[0]) != '/')
 				++x[0];
 		}
-		out[x[1]++] = *(str + x[0]++);
+		if 
+			out[x[1]++] = *(str + x[0]++);
 	}
 	out[x[1]] = '\0';
 	free(str);
