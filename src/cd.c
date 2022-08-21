@@ -304,7 +304,9 @@ int	cd(char *str, t_hlist **env_h)
 
 	printf("str is %s\n", str);
 	str = trim_begin(str);
+	printf("str is %s\n", str);
 	tmp = edit_bs(str);
+	printf("str is %s\n", tmp);
 	if (!*str || !*tmp) {
 		chdir(get_tilde(env_h));
 		return(1);

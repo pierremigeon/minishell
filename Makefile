@@ -35,6 +35,9 @@ edit_e:
 edit_c:
 	vi ./src/cd.c	
 
+edit_ex:
+	vi ./src/expansion.c	
+
 edit_h:
 	vi ./includes/minishell.h
 

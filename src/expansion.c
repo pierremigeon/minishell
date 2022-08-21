@@ -73,7 +73,8 @@ int	is_signal(char *str, int i)
 				return (1);
 	if (*(str + i) == '$' && (i > 0 && *(str + i - 1) != '\\' || i == 0))
 		if (*(str + i +  1) != ' ' && *(str + i + 1) != '\0')
-			return (1);
+			if (*(str + i +  1) != '\"')
+				return (1);
 	return (0);
 }
 
@@ -118,18 +119,16 @@ char	*get_val(t_hlist **env_h, char *str)
 		str++;
 		if (*str == '$')
 			return (get_val2(env_h, str));
-		if (!(ptr = ft_strchr(str, ' ')) && (++i[0]))
-			if (!(ptr = ft_strchr(str, '/')) && (++i[0]))
-				ptr = ft_strchr(str, '\0');
+		ptr = str;
+		while (ft_isalnum(*ptr))
+			++ptr;
+		i[0] = *ptr;		
 		*ptr = '\0';
 		temp = env_h[get_key(str)];
 		while (temp && (i[1] = ft_strcmp(temp->var_name, str)))
 			temp = temp->next;
-		if (i[0] == 0)
-			*ptr = ' ';
-		else if (i[0] == 1)
-			*ptr = '/';
-		if (temp && i[1] == 0)
+		*ptr = i[0];
+		if (temp)
 			return (temp->contents);
 		return (NULL);
 	} 
@@ -150,17 +149,21 @@ char	*expand_command(char *str, t_hlist **env_h)
 		if (is_signal(str, x[0]))
 		{
 			new_s = get_val(env_h, str + x[0]);
+			printf("After get value the str is %s and new_s is %s\n", str, new_s); 
 			while (new_s && *new_s)
 				out[x[1]++] = *new_s++;
 			if (*(str + x[0]) == '$' && *(str + x[0] + 1) == '$')
-				x[0] += 2;	
-			else while (*(str + x[0]) && *(str + x[0]) != ' ' && *(str + x[0]) != '/')
+				x[0] += 2;
+			else
+				x[0] += 1;
+			while (*(str + x[0]) != '\0' && ft_isalnum(*(str + x[0])))
 				++x[0];
 		}
-		if 
+		else
 			out[x[1]++] = *(str + x[0]++);
 	}
 	out[x[1]] = '\0';
 	free(str);
+	printf("out is %s\n", out);
 	return (out);
 }
