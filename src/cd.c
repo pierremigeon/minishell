@@ -218,34 +218,36 @@ char	*set_pointers(char **str, char **start, char **c, int *i)
 	return (new_str);
 }
 
-char	*str_rmc(char *str, char *c)
+char	*str_rmc(char **str, char *c)
 {
 	char	*new_str;
 	char	*start;
 	int	i;
 	int	bscount;
 
-	new_str = set_pointers(&str, &start, &c, &i);
-	while (*(str + i) && (!(bscount = 0)))
+	new_str = set_pointers(str, &start, &c, &i);
+	while (*(*str + i) && (!(bscount = 0)))
 	{
-		set_c(str, c, i);
+		set_c(*str, c, i);
 		if (!c[0] || c[0] && c[1] && c[0] == c[1])
 		{
-			if (*(str + i) == '\\')
-				bscount = count_bs(str + i);
+			if (*(*str + i) == '\\')
+				bscount = count_bs(*str + i);
 			if (bscount == 1)
 				new_str = copy_coding(new_str);
 			i += bscount;
-			while(*(str + i) && *(str + i) == '\\')
-				*(new_str++) = *(str + i++);
-			if (*(str + i) && (*(str + i) != *c || bcheck(str, i)))
-				*(new_str++) = *(str + i);
+			while(*(*str + i) && *(*str + i) == '\\')
+				*(new_str++) = *(*str + i++);
+			if (*(*str + i) && (*(*str + i) != *c || bcheck(*str, i)))
+				*(new_str++) = *(*str + i);
 		}
 		else if (c[0] && c[1] && c[0] != c[1])
-			if (*(str + i) != '\\' || *(str + i + 1) != '\"')
-				*(new_str++) = *(str + i);
+			if (*(*str + i) != '\\' || *(*str + i + 1) != '\"')
+				*(new_str++) = *(*str + i);
 		++i;
 	}
+	if (*str == str[2]) 
+		free(str);
 	return (start);
 }
 
@@ -253,12 +255,15 @@ char	**allocate_pointers(char *str)
 {	
 	char	**out;
 	int	i;
-	
+
 	i = 0;
 	if (!(out = (char **)malloc(sizeof(char *) * 3)))
 		exit (1);
 	while (i < 3)
-		*(out + i++) = str;
+	{
+		out[i] = str;
+		i++;
+	}
 	return (out);	
 }
 
@@ -273,7 +278,7 @@ void	trim_start(char	**str)
 
 char	*trim_begin(char *str)
 {
-	char	**out;
+	char	**out = NULL;
 	char	*c;
 
 	trim_start(&str);
@@ -289,9 +294,9 @@ char	*trim_begin(char *str)
 				out[2] = ft_strchr((*(out + 2) + 1), *c);
 			str = (out[2] && *out[2]) ? out[2] + 1: out[2];
 		}
-		if (out[1] && out[2] == NULL || c[1])
+		if ((out[1] && out[2] == NULL || c[1]) && (out[2] = out[0]))
 			out[0] = multiline(*out, c);
-		out[0] = str_rmc(out[0], c);
+		out[0] = str_rmc(out, c);
 	}
 	str = out[0];
 	free(out);
@@ -302,11 +307,8 @@ int	cd(char *str, t_hlist **env_h)
 {
 	char *tmp;
 
-	printf("str is %s\n", str);
 	str = trim_begin(str);
-	printf("str is %s\n", str);
 	tmp = edit_bs(str);
-	printf("str is %s\n", tmp);
 	if (!*str || !*tmp) {
 		chdir(get_tilde(env_h));
 		return(1);

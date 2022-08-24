@@ -22,18 +22,16 @@ int	run_case_1(t_hlist **env_h, char *str, int *len)
 		len++;
 		str++;
 	}
-	if (!(ptr = ft_strchr(str, '/')) && (i[0] = 1))
-		if (!(ptr = ft_strchr(str, ' ')) && (i[0] = 2))
-			ptr = ft_strchr(str, 0);
+	ptr = str;
+	while (ft_isalnum(*ptr))
+		++ptr;
+	i[0] = *ptr;
 	*ptr = '\0';
 	temp = env_h[get_key(str)];
 	while (temp && (i[1] = ft_strcmp(temp->var_name, str)))
 		temp = temp->next;
 	i[2] = (temp && i[1] == 0) ? temp->con_len - temp->var_len : -ft_strlen(str);
-	if (i[0] == 0)
-		*ptr = '/';
-	else if (i[0] == 1)
-		*ptr = ' ';
+	*ptr = i[0];
 	return (i[2]);
 }
 
@@ -129,7 +127,7 @@ char	*get_val(t_hlist **env_h, char *str)
 			temp = temp->next;
 		*ptr = i[0];
 		if (temp)
-			return (temp->contents);
+			return (ft_strdup(temp->contents));
 		return (NULL);
 	} 
 	return (get_val_tilde(env_h));
@@ -149,7 +147,6 @@ char	*expand_command(char *str, t_hlist **env_h)
 		if (is_signal(str, x[0]))
 		{
 			new_s = get_val(env_h, str + x[0]);
-			printf("After get value the str is %s and new_s is %s\n", str, new_s); 
 			while (new_s && *new_s)
 				out[x[1]++] = *new_s++;
 			if (*(str + x[0]) == '$' && *(str + x[0] + 1) == '$')
@@ -164,6 +161,5 @@ char	*expand_command(char *str, t_hlist **env_h)
 	}
 	out[x[1]] = '\0';
 	free(str);
-	printf("out is %s\n", out);
 	return (out);
 }

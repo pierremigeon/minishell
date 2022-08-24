@@ -17,6 +17,8 @@ test:
 runtest:
 	@lldb $(OUT)
 
+fulltest: test runtest
+
 memcheck_1:
 	@gcc -g $(SRC) $(LIB) -o $(OUT)
 	@if [ -e valgrind_suppressions.sh ]; then bash valgrind_suppressions.sh $(OUT); fi 
