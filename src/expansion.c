@@ -25,6 +25,8 @@ int	run_case_1(t_hlist **env_h, char *str, int *len)
 	ptr = str;
 	while (ft_isalnum(*ptr))
 		++ptr;
+	if (*str == '~')
+		++ptr;
 	i[0] = *ptr;
 	*ptr = '\0';
 	temp = env_h[get_key(str)];

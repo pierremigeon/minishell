@@ -1,2 +1,3 @@
 #!/bin/bash
-perl -i -pe 's{^(\[.*$)}{$n=$n+1; "test #$n $1"}e' ./sandbox/testing/tests_to_run_test.txt
+#Number and format each test sequentially
+perl -i -pe 's{^.*(\[[*x].*$)}{$n=$n+1; "test #$n \t $1"}e' ./tests_to_run.txt
