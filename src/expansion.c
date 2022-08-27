@@ -52,7 +52,7 @@ int	length_of_out(char *str, t_hlist **env_h)
 	t_hlist *temp;
 	char 	*ptr;
 
-	while (*(str + len[0]++) == ' ')
+	while (*(str + len[0]) == ' ' && len[0]++)
 		--len[1];
 	while (*(str + len[0]))
 	{

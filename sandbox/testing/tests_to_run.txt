@@ -119,26 +119,27 @@ test #91 	 [x] echo \$PATH
 test #92 	 [x] echo p$PATH
 test #93 	 [x] echo \$PWD
 test #94 	 [x] echo p\$PWD
-test #95 	 [*] $PWD			(If doesn't cause error, try multiple times)
-test #96 	 [x] echo $$
-test #97 	 [x] echo \$$
-test #98 	 [x] echo -n     "hey"       "these"         "spaces"    "are gone"                  $
-test #99 	 [x] echo         hey      
-test #100 	 [x] echo  hey       hey         
-test #101 	 [x] echo "hey"               "hey"
-test #102 	 [x] echo "word"        "word"        "word"            "word"              "word"         "word" "word"        "word"        "word"
-test #103 	 [x] echo \\    "hello"
-test #104 	 [x] echo \\ \\
-test #105 	 [*] echo \\\\
-test #106 	 [x] echo ''
-test #107 	 [x] echo ''''
-test #108 	 [*] echo "\"
-test #109 	 [*] echo '\'
-test #110 	 [*] echo "\""
-test #111 	 [*] echo '\''
-test #112 	 [*] echo "word"'word'
-test #113 	 [*] echo ".."".."
-test #114 	 [*] echo ~$$~
-test #115 	 [*] echo a$$a
-test #116 	 [*] echo a$poo$a
-test #117 	 [*] echo \\$$\\
+test #95 	 [*] $PWD			---> Need to make it say "$PWD is a directoy" in error message
+test #96 	 [*] ~					---> Need to make it say "$PWD is a directoy" in error message
+test #97 	 [x] echo $$
+test #98 	 [x] echo \$$
+test #99 	 [x] echo -n     "hey"       "these"         "spaces"    "are gone"                  $
+test #100 	 [x] echo         hey      
+test #101 	 [x] echo  hey       hey         
+test #102 	 [x] echo "hey"               "hey"
+test #103 	 [x] echo "word"        "word"        "word"            "word"              "word"         "word" "word"        "word"        "word"
+test #104 	 [x] echo \\    "hello"
+test #105 	 [x] echo \\ \\
+test #106 	 [*] echo \\\\
+test #107 	 [x] echo ''
+test #108 	 [x] echo ''''
+test #109 	 [*] echo "\"
+test #110 	 [*] echo '\'
+test #111 	 [*] echo "\""
+test #112 	 [*] echo '\''
+test #113 	 [*] echo "word"'word'
+test #114 	 [*] echo ".."".."
+test #115 	 [*] echo ~$$~
+test #116 	 [*] echo a$$a
+test #117 	 [*] echo a$poo$a
+test #118 	 [*] echo \\$$\\
