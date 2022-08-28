@@ -6,6 +6,19 @@ void	read_error(void)
 	exit (1);
 }
 
+void	is_a_path(char *str)
+{
+	char *space_ptr;
+
+	while (*str == ' ')
+		str++;
+	if ((space_ptr = ft_strchr(str, ' ')))
+		*space_ptr = '\0';
+	ft_putstr("minishell: ");
+	ft_putstr(str);
+	ft_putstr(": is a directory\n");
+}
+
 void	no_such_command(char *str)
 {
 	char *space_ptr;
@@ -46,6 +59,23 @@ char *free_all_ret_one(char **paths, char *program, int i)
 	free(paths);
 	free(program);
 	return (out);
+}
+
+int	test_dir_short(char *path)
+{
+	DIR             *dirp;
+
+	if (ft_strcmp(".", path) == 0 || ft_strcmp("..", path) == 0)
+		return (0);
+	if (!(dirp = opendir(path)))
+		return (0);
+	else
+	{
+		closedir(dirp);
+		return (1);
+	}
+	closedir(dirp);
+	return (0);
 }
 
 int	test_dir(char *prog, char *path)
@@ -272,6 +302,8 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 	{
 		if ((exec_path = in_path(*str, env_h)))
 			fork_process(*str, environ, exec_path);
+		else if (test_dir_short(*str))
+			is_a_path(*str);
 		else
 			no_such_command(*str);
 	}
