@@ -256,17 +256,39 @@ int	expandable(char *str)
 	return (expandable_sigil(str) || expandable_tilde(str));
 }
 
+
+int	b_check_3(char *str, char *start)
+{
+	int i;
+
+	i = 0;
+	if (str == NULL || start == NULL)
+		return (0);
+	str--;
+	while (*str && str > start && *str == '\\')
+	{
+		i++;
+		str--;
+	}
+	return (i % 2);
+}
+
+
 int	check_balance(char *str)
 {
 	char	*c;
 	char	*p1;
 	char    *p2;
+	char	*str_start;
 
+	str_start = str;
 	while(str && *str)
 	{
 		c = check_quotes(str);
 		p1 = ft_strchr(str, *c);
 		p2 = ft_strchr(p1 + 1, *c);
+		while (b_check_3(p2, str_start))
+			p2 = ft_strchr(p2 + 1, *c);
 		str = (p2 && *p2) ? p2 + 1: p2;
 		if (p1 && p2 == NULL)
 			return (0);
