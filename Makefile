@@ -43,6 +43,9 @@ edit_ex:
 edit_h:
 	vi ./includes/minishell.h
 
+e_tests:
+	vi ./sandbox/testing/tests_to_run.txt
+
 clang:
 	@clang $(SRC) $(LIB) -o $(OUT)
 	@chmod +x ./$(OUT)

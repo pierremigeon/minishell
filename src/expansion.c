@@ -153,7 +153,7 @@ char	*expand_command(char *str, t_hlist **env_h)
 				out[x[1]++] = *new_s++;
 			if (*(str + x[0]) == '$' && *(str + x[0] + 1) == '$')
 				x[0] += 2;
-			else
+			else if (ft_isalnum(*(str + x[0] + 1)) || (out[x[1]++] = *(str + x[0])))
 				x[0] += 1;
 			while (*(str + x[0]) != '\0' && ft_isalnum(*(str + x[0])))
 				++x[0];
@@ -161,7 +161,6 @@ char	*expand_command(char *str, t_hlist **env_h)
 		else
 			out[x[1]++] = *(str + x[0]++);
 	}
-	out[x[1]] = '\0';
 	free(str);
 	return (out);
 }

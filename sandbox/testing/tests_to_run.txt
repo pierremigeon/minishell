@@ -15,94 +15,111 @@ test #7 	 [x] cd
 test #8 	 [x] cd    $
 test #9 	 [x] ^    cd     $
 test #10 	 [x] cd ""
-test #11 	 [x] cd " "
-test #12 	 [x] cd "  "
-test #13 	 [x] cd "   "
-test #14 	 [x] cd "   word"
-test #15 	 [x] cd "x" "y"
-test #16 	 [x] cd "x"  "y"
-test #17 	 [x] cd "x"   "y"
-test #18 	 [x] cd "p\p"
-test #19 	 [x] cd " p\p "
-test #20 	 [x] cd "\"
-test #21 	 [x] cd "\" "
-test #22 	 [x] ^cd "\"''"$ 
-test #23 	 [x] ^cd "\"''" $
-test #24 	 [x] cd "$PATH"
-test #25 	 [x] cd "$PWD"
-test #26 	 [x] cd "~"
-test #27 	 [x] cd ~
-test #28 	 [x] cd ~~
-test #29 	 [x] cd ~~~
-test #30 	 [x] cd \~
-test #31 	 [x] cd ~_~
-test #32 	 [*] cd ~$~
-test #33 	 [x] cd ~$HOME~
-test #34 	 [x] cd ~$PWD~
-test #35 	 [x] cd ~$PATH~
-test #36 	 [x] cd ..
-test #37 	 [x] ^cd ..  $
-test #38 	 [x] cd .
-test #39 	 [x] ^cd    .$
-test #40 	 [x] ^cd    .     $
-test #41 	 [x] cd \$
-test #42 	 [x] cd \\$
-test #43 	 [x] cd \\\$
-test #44 	 [x] cd \\\\$
-test #45 	 [x] cd \\\\\$
-test #46 	 [x] cd \ $
-test #47 	 [x] cd \ \ $
-test #48 	 [x] cd \ \ \ $
-test #49 	 [x] cd \ \ \$
-test #50 	 [x] cd ".."".."
-test #51 	 [x] cd ".."'..'
-test #52 	 [x] cd ".."'..'".."
-test #53 	 [x] cd ".."\
-test #54 	 [*] cd ".."'..'".."\	--> Just editing wrong now
-test #55 	 [*] cd ".."'..'".."\\	--> Just editing wrong now
-test #56 	 [x] cd ".."'..'".."\\\
-test #57 	 [*] cd \ ".."'..'".."
-test #58 	 [x] cd \\ ".."'..'".."
-test #59 	 [*] cd \\\ ".."'..'".."
-test #60 	 [x] cd "..
-test #61 	 [x] cd "..'
-test #62 	 [x] cd '..
-test #63 	 [x] cd \"..
-test #64 	 [x] cd ~$$~
-test #65 	 [x] cd $$~
-test #66 	 [x] cd ~$$
-test #67 	 [x] ^cd $$~ $
-test #68 	 [x] ^cd ~$$~ $
-test #69 	 [x] ^cd ~$$ $
-test #70 	 [x] cd "$$"
-test #71 	 [x] cd "$$ "
-test #72 	 [x] cd \$$
-test #73 	 [*] cd "\$$"
-test #74 	 [*] cd "\$$$$"
-test #75 	 [x] cd "$$$"
-test #76 	 [x] cd $$$
-test #77 	 [x] cd $$$$$
-test #78 	 [x] cd $$\$$
-test #79 	 [x] cd $$$$
-test #80 	 [x] cd \
+test #11 	 [nr] cd ''
+test #12 	 [x] cd " "
+test #13 	 [nr] cd ' '
+test #14 	 [x] cd "  "
+test #15 	 [nr] cd '  '
+test #16 	 [x] cd "   "
+test #17 	 [nr]	cd '   '
+test #18 	 [x] cd "   word"
+test #19 	 [nr] cd '   word'
+test #20 	 [x] cd "x" "y"
+test #21 	 [nr] cd'x' 'y'
+test #22 	 [x] cd "x"  "y"
+test #23 	 [nr] cd 'x'  'y'
+test #24 	 [x] cd "x"   "y"
+test #25 	 [x] cd 'x'   'y'
+test #26 	 [x] cd "p\p"
+test #27 	 [nr] cd 'p\p'
+test #28 	 [x] cd " p\p "
+test #29 	 [nr] cd ' p\p '
+test #30 	 [x] cd "\"
+test #31 	 [nr] cd '\'
+test #32 	 [x] cd "\" "
+test #33 	 [x] ^cd '\' '$
+test #34 	 [x] ^cd "\"''"$ 
+test #35 	 [x] ^cd "\"''" $
+test #36 	 [x] ^cd '\'""'$
+test #37 	 [x] ^cd '\'""' $
+test #38 	 [*] cd "$PATH"   --> line 245 cd()
+test #39 	 [*] cd "$PWD"	  --> line 245 cd()
+test #40 	 [x] cd "~"
+test #41 	 [x] cd ~
+test #42 	 [x] cd ~~
+test #43 	 [x] cd ~~~
+test #44 	 [x] cd \~
+test #45 	 [x] cd ~_~
+test #46 	 [x] cd ~$~
+test #47 	 [x]	cd $~$
+test #48 	 [x]	cd p$%
+test #49 	 [x]	cd p%$
+test #50 	 [x] cd ~$HOME~
+test #51 	 [x] cd ~$PWD~
+test #52 	 [x] cd ~$PATH~
+test #53 	 [x] cd ..
+test #54 	 [x] ^cd ..  $
+test #55 	 [x] cd .
+test #56 	 [x] ^cd    .$
+test #57 	 [x] ^cd    .     $
+test #58 	 [x] cd \$
+test #59 	 [x] cd \\$
+test #60 	 [x] cd \\\$
+test #61 	 [x] cd \\\\$
+test #62 	 [x] cd \\\\\$
+test #63 	 [x] cd \ $
+test #64 	 [x] cd \ \ $
+test #65 	 [x] cd \ \ \ $
+test #66 	 [x] cd \ \ \$
+test #67 	 [x] cd ".."".."
+test #68 	 [x] cd ".."'..'
+test #69 	 [x] cd ".."'..'".."
+test #70 	 [x] cd ".."\
+test #71 	 [*] cd ".."'..'".."\	--> Just editing wrong now
+test #72 	 [*] cd ".."'..'".."\\	--> Just editing wrong now
+test #73 	 [x] cd ".."'..'".."\\\
+test #74 	 [*] cd \ ".."'..'".."
+test #75 	 [x] cd \\ ".."'..'".."
+test #76 	 [*] cd \\\ ".."'..'".."
+test #77 	 [x] cd "..
+test #78 	 [x] cd "..'
+test #79 	 [x] cd '..
+test #80 	 [x] cd \"..
+test #81 	 [x] cd ~$$~
+test #82 	 [x] cd $$~
+test #83 	 [x] cd ~$$
+test #84 	 [x] ^cd $$~ $
+test #85 	 [x] ^cd ~$$~ $
+test #86 	 [x] ^cd ~$$ $
+test #87 	 [x] cd "$$"
+test #88 	 [x] cd "$$ "
+test #89 	 [x] cd \$$
+test #90 	 [*] cd "\$$"
+test #91 	 [*] cd "\$$$$"
+test #92 	 [x] cd "$$$"
+test #93 	 [x] cd $$$
+test #94 	 [x] cd $$$$$
+test #95 	 [x] cd $$\$$
+test #96 	 [x] cd $$$$
+test #97 	 [x] cd \
 >\
 >\
 >
-test #81 	 [x] cd \
+test #98 	 [x] cd \
 >\ "
 >
 >"
 >
-test #82 	 [*] cd lol\words laghter \$
-test #83 	 [*] cd "lol\words laghter \"$
-test #84 	 [x] cd l\l
-test #85 	 [x] cd "l\l"
-test #86 	 [x] cd "these\are\words'and'yes"
-test #87 	 [x] cd "
+test #99 	 [*] cd lol\words laghter \$
+test #100 	 [*] cd "lol\words laghter \"$
+test #101 	 [x] cd l\l
+test #102 	 [x] cd "l\l"
+test #103 	 [x] cd "these\are\words'and'yes"
+test #104 	 [x] cd "
 >'
 >'
 >"
-test #88 	 [x] cd "
+test #105 	 [x] cd "
 >"'
 >'
 
@@ -113,33 +130,33 @@ Echo function totally under construction. Current focus is on the CD function, b
 
 */
 
-test #89 	 [x] echo \
-test #90 	 [x] echo \\
-test #91 	 [x] echo \$PATH
-test #92 	 [x] echo p$PATH
-test #93 	 [x] echo \$PWD
-test #94 	 [x] echo p\$PWD
-test #95 	 [x] $PWD
-test #96 	 [x] ~	
-test #97 	 [x] echo $$
-test #98 	 [x] echo \$$
-test #99 	 [x] echo -n     "hey"       "these"         "spaces"    "are gone"                  $
-test #100 	 [x] echo         hey      
-test #101 	 [x] echo  hey       hey         
-test #102 	 [x] echo "hey"               "hey"
-test #103 	 [x] echo "word"        "word"        "word"            "word"              "word"         "word" "word"        "word"        "word"
-test #104 	 [x] echo \\    "hello"
-test #105 	 [x] echo \\ \\
-test #106 	 [*] echo \\\\
-test #107 	 [x] echo ''
-test #108 	 [x] echo ''''
-test #109 	 [*] echo "\"
-test #110 	 [*] echo '\'
-test #111 	 [*] echo "\""
-test #112 	 [*] echo '\''
-test #113 	 [*] echo "word"'word'
-test #114 	 [*] echo ".."".."
-test #115 	 [*] echo ~$$~
-test #116 	 [*] echo a$$a
-test #117 	 [*] echo a$poo$a
-test #118 	 [*] echo \\$$\\
+test #106 	 [x] echo \
+test #107 	 [x] echo \\
+test #108 	 [x] echo \$PATH
+test #109 	 [x] echo p$PATH
+test #110 	 [x] echo \$PWD
+test #111 	 [x] echo p\$PWD
+test #112 	 [x] $PWD
+test #113 	 [x] ~	
+test #114 	 [x] echo $$
+test #115 	 [x] echo \$$
+test #116 	 [x] echo -n     "hey"       "these"         "spaces"    "are gone"                  $
+test #117 	 [x] echo         hey      
+test #118 	 [x] echo  hey       hey         
+test #119 	 [x] echo "hey"               "hey"
+test #120 	 [x] echo "word"        "word"        "word"            "word"              "word"         "word" "word"        "word"        "word"
+test #121 	 [x] echo \\    "hello"
+test #122 	 [x] echo \\ \\
+test #123 	 [*] echo \\\\
+test #124 	 [x] echo ''
+test #125 	 [x] echo ''''
+test #126 	 [*] echo "\"
+test #127 	 [*] echo '\'
+test #128 	 [*] echo "\""
+test #129 	 [*] echo '\''
+test #130 	 [*] echo "word"'word'
+test #131 	 [*] echo ".."".."
+test #132 	 [*] echo ~$$~
+test #133 	 [*] echo a$$a
+test #134 	 [*] echo a$poo$a
+test #135 	 [*] echo \\$$\\

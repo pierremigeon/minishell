@@ -242,7 +242,7 @@ char	*str_rmc(char **str, char *c)
 				*(new_str++) = *(*str + i);
 		}
 		else if (c[0] && c[1] && c[0] != c[1])
-			if (*(*str + i) != '\\' || *(*str + i + 1) != '\"')
+			if (*(*str + i) != '\\' || *(*str + i + 1) != '\"') // && *(*str + i + 1) != '\'')
 				*(new_str++) = *(*str + i);
 		++i;
 	}
@@ -307,8 +307,11 @@ int	cd(char *str, t_hlist **env_h)
 {
 	char *tmp;
 
+	printf("str is %s upon entry cd()\n", str);
 	str = trim_begin(str);
+	printf("after trim str is %s\n", str);
 	tmp = edit_bs(str);
+	printf("tmp is %s at end\n", tmp);
 	if (!*str || !*tmp) {
 		chdir(get_tilde(env_h));
 		return(1);
