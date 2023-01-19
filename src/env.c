@@ -76,17 +76,51 @@ void	new_point(t_hlist **env_h, int key, char *str1, char *str2)
 		set_list_end(env_h[key], env_h);
 }
 
+int	check_legal_chars(char *str)
+{
+	while (*str)	
+	{
+		if (!ft_isalnum(*str) && *str != '.' && *str != '_')
+			return(1);
+		++str;
+	}
+	return (0);
+}
+
+int	illegal_char_error(void)
+{
+	write(1, "setenv: Variable name must begin with a letter.\n", 48);
+	return (1);
+}
+
+
+char	**get_clean_args(char *str, t_hlist **env_h)
+{
+	char    **args;
+
+	args = ft_strsplit(str, ' ');
+	if (args_len(args) == 4 && free_args(args))
+		if(set_env_error())
+			return (NULL);
+	if (args_len(args) == 1 && free_args(args))
+		if (env(env_h))
+			return (NULL);
+	if (check_legal_chars(args[1]))
+		if (illegal_char_error())
+			return (NULL);
+	if (!args[2])
+		args = surgery(args);
+	return (args);
+}
+
 int	set_env(char *str, t_hlist **env_h)
 {
 	t_hlist *temp;
 	char 	**args;
 	int	key;
 
-	args = ft_strsplit(str, ' ');
-	if ( args_len(args) == 1 || args_len(args) == 4)
-		return (args_len(args) == 4) ? free_args(args) && set_env_error() : free_args(args) && env(env_h);
-	if (!args[2])
-		args = surgery(args);
+	if (!(args = get_clean_args(str, env_h)))
+		return (1);
 	key = get_key(args[1]);
 	if (!env_h[key])
 		new_point(env_h, key, args[1], args[2]);
