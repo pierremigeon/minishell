@@ -89,25 +89,30 @@ int	check_legal_chars(char *str)
 
 int	illegal_char_error(void)
 {
-	write(1, "setenv: Variable name must begin with a letter.\n", 48);
+	write(1, "setenv: Variable name must contain alphanumeric characters.\n", 60);
 	return (1);
 }
 
+int	start_error(void)
+{
+	write(1, "setenv: Variable name must begin with a letter.\n", 48);
+	return (1);
+}
 
 char	**get_clean_args(char *str, t_hlist **env_h)
 {
 	char    **args;
 
 	args = ft_strsplit(str, ' ');
-	if (args_len(args) == 4 && free_args(args))
-		if(set_env_error())
-			return (NULL);
-	if (args_len(args) == 1 && free_args(args))
-		if (env(env_h))
-			return (NULL);
-	if (check_legal_chars(args[1]))
-		if (illegal_char_error())
-			return (NULL);
+
+	if (!ft_isalpha(*(*(args + 1))) && *(*(args + 1)) != '_' && start_error())
+		return (NULL);
+	if (args_len(args) >= 4 && free_args(args) && set_env_error())
+		return (NULL);
+	if (args_len(args) == 1 && free_args(args) && env(env_h))
+		return (NULL);
+	if (check_legal_chars(args[1]) && illegal_char_error())
+		return (NULL);
 	if (!args[2])
 		args = surgery(args);
 	return (args);
