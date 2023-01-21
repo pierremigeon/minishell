@@ -103,6 +103,13 @@ int	start_error(char **args, int i)
 	return (1);
 }
 
+int	usage_statement_error(char **args)
+{
+	free_args(args);
+	write(1, "usage: setenv [variable_name] [value] | [-h]\n", 45);
+	return (1);
+}
+
 int	quotation_error(int i)
 {
 	if (i == -1)
@@ -181,6 +188,9 @@ char	**clean_args(char *str, t_hlist **env_h)
 	int	ar_len;
 
 	args = ft_strsplit(str, ' ');
+	if (args[1] != NULL && !(ft_strcmp(args[1], "-h")))
+		if (usage_statement_error(args))
+			return (NULL);
 	if ((ar_len = args_len(args)) > 1)
 		if (!(args[1] = trim_qs(count_qs(args[1]), args[1])))
 			if(free_args(args))
