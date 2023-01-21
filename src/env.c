@@ -17,12 +17,12 @@ int	env(t_hlist **env_h)
 	return (1);
 }
 
-int	set_env_error(void)
+int	set_env_error(char **args)
 {
+	free_args(args);
 	write(1, "setenv: Too many arguments.\n", 28);
 	return (1);
 }
-
 void	reset_variable(t_hlist *node, char *contents)
 {
 	free(node->contents);
@@ -53,7 +53,7 @@ char	**surgery(char **args)
 	int	len;
 	char	**new_args;
 
-	len = 4;
+	len = 3 + 1;
 	if (!(new_args = (char **)malloc(sizeof(char *) * len)))
 		exit(1);
 	new_args[--len] = NULL;
@@ -87,33 +87,114 @@ int	check_legal_chars(char *str)
 	return (0);
 }
 
-int	illegal_char_error(void)
+int	illegal_char_error(char **args, int i)
 {
+	if (i)
+		free_args(args);
 	write(1, "setenv: Variable name must contain alphanumeric characters.\n", 60);
 	return (1);
 }
 
-int	start_error(void)
+int	start_error(char **args, int i)
 {
+	if (i)
+		free_args(args);
 	write(1, "setenv: Variable name must begin with a letter.\n", 48);
 	return (1);
 }
 
-char	**get_clean_args(char *str, t_hlist **env_h)
+int	quotation_error(int i)
 {
-	char    **args;
+	if (i == -1)
+		write(1, "Unmatched \'\"\'.\n", 15);
+	if (i == -2)
+		write(1, "Unmatched \'\'\'.\n", 15);
+	return (1);
+}
+
+char	*trim_qs(int count, char *str)
+{
+	char *out;
+	int i;
+	int x;
+
+	i = -1;
+	x = 0;
+	if (count == 0)
+		return str;
+	else if (count == -4 && start_error(&str, 0))
+		return (NULL);
+	else if (count == -3 && illegal_char_error(&str, 0))
+		return (NULL);
+	else if (count < 0 && quotation_error(count))
+		return (NULL);
+	if (!(out = (char *)malloc(sizeof(char) * count)))
+		exit(1);
+	while (str[++i])
+		if (str[i] != '\"' && str[i] != '\'')
+			out[x++] = str[i];
+	out[x] = '\0';
+	free(str);
+	return (out);
+}
+
+void	set_counts(char c, int *c1, int *c2)
+{
+	if (*c1 == 0 && (*c2 += 1)) 
+		*c1 = (c == '\"') ? -1 : -2;
+	else if (*c1 == -1 && c == '\"' && ((*c2 -= 1) || 1)) 
+		*c1 = 0;
+	else if (*c1 == -2 && c == '\'' && ((*c2 -= 1) || 1)) 
+		*c1 = 0;
+	else 
+		*c2 += 1 * (*c2 < 2);
+}
+
+int	count_qs(char *str)
+{
+	int i;
+	int c1;
+	int c2;
+	int total;
+
+	i = -1;
+	c1 = c2 = total = 0;
+	while(str[++i])
+		if ((str[i] == '\"' || str[i] == '\'') && (total += 1))
+			set_counts(str[i], &c1, &c2);
+	if (total == 0)
+		return (0);
+	if (c1 < 0)
+		return (c1);
+	else if ((str[0] == '\"' || str[0] == '\'') && c2 == 0)
+		return (-4);
+	else if (c2 == 0)
+		return (i - total + 1);
+	else if (c2 > 0)
+		return (-3);
+	return (0);
+}
+
+char	**clean_args(char *str, t_hlist **env_h)
+{
+	char	**args;
+	int	ar_len;
 
 	args = ft_strsplit(str, ' ');
-
-	if (!ft_isalpha(*(*(args + 1))) && *(*(args + 1)) != '_' && start_error())
+	if ((ar_len = args_len(args)) > 1)
+		if (!(args[1] = trim_qs(count_qs(args[1]), args[1])))
+			if(free_args(args))
+				return (NULL);
+	if (ar_len > 1 && !ft_isalpha(*(*(args + 1))) && *(*(args + 1)) != '_')
+		if (start_error(args, 1))
+			return (NULL);
+	if (ar_len >= 4 && set_env_error(args))
 		return (NULL);
-	if (args_len(args) >= 4 && free_args(args) && set_env_error())
+	if (ar_len == 1 && free_args(args) && env(env_h))
 		return (NULL);
-	if (args_len(args) == 1 && free_args(args) && env(env_h))
+	if (ar_len > 1 && check_legal_chars(args[1]) && illegal_char_error(args, 1))
 		return (NULL);
-	if (check_legal_chars(args[1]) && illegal_char_error())
-		return (NULL);
-	if (!args[2])
+	if (ar_len == 2)
 		args = surgery(args);
 	return (args);
 }
@@ -124,9 +205,10 @@ int	set_env(char *str, t_hlist **env_h)
 	char 	**args;
 	int	key;
 
-	if (!(args = get_clean_args(str, env_h)))
+	if (!(args = clean_args(str, env_h)))
 		return (1);
 	key = get_key(args[1]);
+
 	if (!env_h[key])
 		new_point(env_h, key, args[1], args[2]);
 	else
