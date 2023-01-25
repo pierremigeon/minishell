@@ -19,12 +19,12 @@ void	no_such_command(char *str)
 	ft_putstr(": command not found\n");
 }
 
-int	free_args(char **args)
+int	free_args(char **args, int arg_len)
 {
 	int i;
 
 	i = 0;
-	while (args[i])
+	while (i < arg_len || args[i])
 		free (args[i++]);
 	free(args);
 	return (1);
@@ -109,7 +109,7 @@ char	*in_path(char *str, t_hlist **env_h)
 	while (paths[i])
 		if ((x = test_dir(program, paths[i++])))
 			return(free_all_ret_one(paths, program, --i));
-	free_args(paths);
+	free_args(paths, 0);
 	free(program);
 	return (NULL);
 }
@@ -150,7 +150,7 @@ void	fork_process(char *str, char **env, char *b_path)
 		wait(NULL);
 	else
 		ft_putstr("Error: Forking failed... \n");
-	free_args(args);
+	free_args(args, 0);
 	free(total_path);
 }
 
