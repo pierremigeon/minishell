@@ -61,6 +61,6 @@ void		add_$(t_hlist **env_h);
 void		get_env(t_hlist	**env_h, char **env);
 void		test_hash_table(t_hlist **env_h);
 //FREE AND ERROR
-int		free_args(char **args);
+int		free_args(char **args, int arg_len);
 
 #endif
