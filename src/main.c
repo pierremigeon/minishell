@@ -1,53 +1,5 @@
 #include "../includes/minishell.h"
 
-void	read_error(void)
-{
-	write(1, "Read error!\n", 12);
-	exit (1);
-}
-
-void	no_such_command(char *str)
-{
-	char *space_ptr;
-
-	while (*str == ' ')
-		str++;
-	if ((space_ptr = ft_strchr(str, ' ')))
-		*space_ptr = '\0';
-	ft_putstr("minishell: ");
-	ft_putstr(str);
-	ft_putstr(": command not found\n");
-}
-
-int	free_args(char **args, int arg_len)
-{
-	int i;
-
-	i = 0;
-	while (i < arg_len || args[i])
-		free (args[i++]);
-	free(args);
-	return (1);
-}
-
-char *free_all_ret_one(char **paths, char *program, int i)
-{
-	int x;
-	char *out;
-
-	x = 0;
-	while (paths[x])
-	{
-		if (x == i)
-			out = ft_strdup(paths[x]);	
-		free(paths[x]);
-		++x;
-	}
-	free(paths);
-	free(program);
-	return (out);
-}
-
 int	test_dir(char *prog, char *path)
 {
 	DIR 		*dirp;
@@ -83,12 +35,6 @@ char	*first_name(char *str)
 	if (ptr)
 		*ptr = ' ';
 	return (out);
-}
-
-char *no_path_variable(char *program)
-{
-	free(program);
-	return (NULL);
 }
 
 char	*in_path(char *str, t_hlist **env_h)
@@ -225,27 +171,6 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 			fork_process(*str, environ, exec_path);
 		else
 			 no_such_command(*str);
-	}
-}
-
-void	free_env(t_hlist **env_h)
-{
-	int n;
-	t_hlist *temp;
-	t_hlist *last;
-
-	n = 0;
-	while (n < HASH_SIZE + 2)
-	{
-		temp = env_h[n];
-		while(temp)
-		{
-			last = temp;
-			temp = temp->next;
-			free_thlist(last);
-			last = NULL;
-		}
-		++n;
 	}
 }
 

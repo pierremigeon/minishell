@@ -17,12 +17,6 @@ int	env(t_hlist **env_h)
 	return (1);
 }
 
-int	set_env_error(char **args)
-{
-	free_args(args, 0);
-	write(1, "setenv: Too many arguments.\n", 28);
-	return (1);
-}
 void	reset_variable(t_hlist *node, char *contents)
 {
 	free(node->contents);
@@ -88,42 +82,6 @@ int	check_legal_chars(char *str)
 	return (0);
 }
 
-int	illegal_char_error(char **args, int i)
-{
-	if (i)
-		free_args(args, 0);
-	else
-		free(*args);
-	write(1, "setenv: Variable name must contain alphanumeric characters.\n", 60);
-	return (1);
-}
-
-int	start_error(char **args, int i)
-{
-	if (i)
-		free_args(args, 0);
-	else
-		free(*args);
-	write(1, "setenv: Variable name must begin with a letter.\n", 48);
-	return (1);
-}
-
-int	usage_statement_error(char **args)
-{
-	free_args(args, 0);
-	write(1, "usage: setenv [variable_name] [value] | [-h]\n", 45);
-	return (1);
-}
-
-int	quotation_error(int i)
-{
-	if (i == -1)
-		write(1, "Unmatched \'\"\'.\n", 15);
-	if (i == -2)
-		write(1, "Unmatched \'\'\'.\n", 15);
-	return (1);
-}
-
 int	esc(int flag)
 {
 	return (flag % 2);
@@ -152,13 +110,6 @@ int	check_behind(char *str, int len, int *flag, int total)
 		str[total] = cur_char;
 	return (1);
 }
-
-void	f_out(char **str)
-{
-	free(*str);
-	*str = NULL;
-}
-
 
 int	start_quote(char *str, int i, int *b_flag, int *q_flag)
 {
@@ -382,19 +333,6 @@ int	set_env(char *str, t_hlist **env_h)
 		}
 	}
 	return (free_args(args, 0));
-}
-
-void	free_thlist(t_hlist *node)
-{
-	free(node->var_name);
-	free(node->contents);
-	free(node);
-}
-
-int	unset_env_error(void)
-{
-	write(1, "unsetenv: Too few arguments.\n", 29);
-	return (1);
 }
 
 void	delete_node(t_hlist *temp, t_hlist **env_h)
