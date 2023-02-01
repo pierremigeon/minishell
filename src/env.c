@@ -94,7 +94,6 @@ int	esc(int flag)
 
 int	check_behind(char c, int *flag)
 {
-	printf("check_behind: %c\n", c);
 	if (*flag < 2)
 		*flag = 2;
 	if (c == '\\' && (*flag += 1))
@@ -106,7 +105,6 @@ int	check_behind(char c, int *flag)
 
 int	q_check(char *str, char c, int total)
 {
-	printf("q_check: %c\n", c);
 	if (c == str[total] && !(str[total] = '\0'))
 		return (0);
 	if (str[total] && (c == '\"' || c == '\''))
@@ -124,19 +122,14 @@ char	*prepare_out(char *str, int *b_flag, int count)
 
 	i = -1;
 	x = 0;
-	printf("Count is %i\n", count);
 	if (!(out = (char *)malloc(sizeof(char) * count--)))
 		exit(1);
 	out[count] = '\0';
 	while (str[++i])
 	{
 		if (check_behind(str[i], b_flag) || q_check(out, str[i], count))
-		{
 			out[x++] = str[i];
-			printf("out[x] is %c\n", str[i]);
-		}
 	}
-	printf("out is %s and x is %i and count is %i\n", out, x, count);
 	out[x] = '\0';
 	return (out);
 }
@@ -158,7 +151,6 @@ char	*trim_qs(int count, char *str, int flag)
 	if (count < 0 && quotation_error(count))
 		return (NULL);
 	out = prepare_out(str, &flag, count);
-	printf("HEre\n");
 //	if (flag < 0 && start_error(&str, 0))
 //		f_out(&out);
 	free(str);
@@ -179,8 +171,10 @@ void	set_counts(char c, int *c1, int *c2)
 		*c2 += 1 * (*c2 < 2);
 }
 
-int	pross_bksl(char c, int *i)
+int	pross_bksl(char c, int *i, int c1, int *c3)
 {
+	if (c1 == -1 && *c3 == -4 && c == '\\')
+		return (0);
 	if (c == '\\' && (*i += 1))
 		return (esc(*i));
 	return (!esc(*i) && !(*i = 0));
@@ -235,7 +229,7 @@ int	count_qs(char *str, int flag)
 		{
 			if (flag && check_start_quotes(str, i, x[0], &x[3]))
 				x[3] = (x[3] == -1) ? -3 : -4;
-			if (pross_bksl(str[i], &x[2]) && (total += 1))
+			if (pross_bksl(str[i], &x[2], x[0], &x[3]) && (total += 1))
 				set_counts(str[i], &x[0], &x[1]);
 		}
 	}
@@ -258,7 +252,7 @@ char	**trimming(char **args, int ar_len)
 
 int	wrong_start_check1(char c)
 {
-	if (!ft_isalpha(c) && c != '_' && c != '\'' && c != '\"')
+	if (!ft_isalpha(c) && c != '_' && !isQorS(c))
 		return (1);
 	return (0);
 }
