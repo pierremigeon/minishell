@@ -178,7 +178,9 @@ int	pross_bksl(char c, int *i, int c1)
 
 int	wrong_start_check1(char c, int flag)
 {
-	if (!ft_isalpha(c) && c != '_' && (!isQorS(c) || (c == '\\') * flag))
+	if ((c == '\\') * flag)
+		return (1);
+	if (!ft_isalpha(c) && c != '_' && !isQorS(c))
 		return (1);
 	return (0);
 }
@@ -189,8 +191,8 @@ int	check_start_quotes(char *str, int i, int c1, int *c4)
 
 	if (*c4 == -4 || *c4 == -3)
 		return (0);
-	if (c1 == 0 && wrong_start_check1(*str, 1))
-		return (!(*c4 = -4));
+	if (c1 == 0 && wrong_start_check1(str[i], 1))
+		return (1);
 	if (c[str[i] % 2] == c1)
 		if (str[i - 1] != str[i])
 			return (1);
