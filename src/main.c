@@ -182,7 +182,7 @@ void	clear_terminal_at_start(t_hlist **env_h, char **environ)
 
 int	main()
 {
-	char 		*line;
+	char 		**line;
 	extern char 	**environ;
 	t_hlist		*env_h[HASH_SIZE + 2] = { NULL };
 	int		i;
@@ -190,12 +190,23 @@ int	main()
 	get_env(env_h, environ);
 	clear_terminal_at_start(env_h, environ);
 	ft_putstr("$> ");
-	while ((i = get_next_line(0, &line)) > 0)
+	while ((i = get_next_line(0, &line[0])) > 0)
 	{
-		if (*line)
-			run_command(&line, env_h, environ);
+		if (line && ft_strcmp("H", line[0]))
+			run_command(&line[0], env_h, environ);
 		ft_putstr("$> ");
-		free(line);
+		if (!ft_strcmp("H", line[0]) && line[1])
+		{
+			ft_putstr(line[1]);
+			write(1, "\n", 1);
+			run_command(&line[1], env_h, environ);
+			ft_putstr("$> ");
+		}
+		//if(line[1])
+		//	free(line[1]);
+		if (ft_strcmp("H", line[0]))
+			ft_strcpy(line[1], line[0]);
+		free(line[0]);
 	}
 	free_env(env_h);
 	if (i < 0)
