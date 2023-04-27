@@ -60,7 +60,7 @@ void			add_$(t_hlist **env_h);
 void			get_env(t_hlist	**env_h, char **env);
 void			test_hash_table(t_hlist **env_h);
 
-//ERROR FUNCTION MODULE
+//ERROR FUNCTIONS MODULE
 int			free_args(char **args, int arg_len);
 int			set_env_error(char **args);
 int			illegal_char_error(char **args, int i);
@@ -71,12 +71,15 @@ int			unset_env_error(void);
 void			no_such_command(char *str);
 void			read_error(void);
 
-//FREE FUNCTION MODULE
+//FREE FUNCTIONS MODULE
 void			free_thlist(t_hlist *node);
 int			free_args(char **args, int arg_len);
 char			*free_all_ret_one(char **paths, char *program, int i);
 void			free_env(t_hlist **env_h);
 void			f_out(char **str);
 char			*no_path_variable(char *program);
+
+//HISTORY FEATURE MODULE
+int			history(t_hlist **env_h);
 
 #endif

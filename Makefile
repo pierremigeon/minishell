@@ -1,5 +1,5 @@
 
-SRC = ./src/main.c ./src/echo.c ./src/cd.c ./src/env_hash.c ./src/expansion.c ./src/env.c ./src/errors.c ./src/free.c
+SRC = ./src/main.c ./src/echo.c ./src/cd.c ./src/env_hash.c ./src/expansion.c ./src/env.c ./src/errors.c ./src/free.c ./src/history.c
 LIB = ./libft/libft.a
 OUT = minishell
 
