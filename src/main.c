@@ -165,6 +165,7 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 {
 	char *exec_path;
 
+	set_history(*str, env_h);
 	if (expandable(*str)) 
 		*str = expand_command(*str, env_h);
 	if (!(built_in(*str, env_h)))
@@ -211,7 +212,6 @@ int	main()
 				free(line2);
 			line2 = line;
 		}
-		set_history(line, env_h);
 	}
 	free_env(env_h);
 	if (i < 0)
