@@ -23,6 +23,9 @@ int			env_2(t_hlist **env_h);
 int			set_env(char *str, t_hlist **env_h);
 void			free_thlist(t_hlist *node);
 int			unset_env(char *str, t_hlist **env_h);
+void			reset_variable(t_hlist *node, char *contents);
+void			new_point(t_hlist **env_h, int key, char *str1, char *str2);
+void			set_list_end(t_hlist *new_end, t_hlist **env_h);
 
 // ECHO MODULE
 void			putnendl(char *str, char c, int mode);
@@ -81,5 +84,6 @@ char			*no_path_variable(char *program);
 
 //HISTORY FEATURE MODULE
 int			history(t_hlist **env_h);
+void    		set_history(char *str, t_hlist **env_h);
 
 #endif

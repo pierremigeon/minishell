@@ -211,6 +211,7 @@ int	main()
 				free(line2);
 			line2 = line;
 		}
+		set_history(line, env_h);
 	}
 	free_env(env_h);
 	if (i < 0)

@@ -61,10 +61,10 @@ char	**surgery(char **args)
 void	new_point(t_hlist **env_h, int key, char *str1, char *str2)
 {
 	env_h[key] = new_hash_node_2(str1, str2);
-	if (!env_h[50] && !env_h[51])
+	if (!env_h[HASH_SIZE] && !env_h[HASH_SIZE + 1])
 	{
-		env_h[50] = env_h[key];
-		env_h[51] = env_h[key];
+		env_h[HASH_SIZE] = env_h[key];
+		env_h[HASH_SIZE + 1] = env_h[key];
 	}
 	else
 		set_list_end(env_h[key], env_h);
