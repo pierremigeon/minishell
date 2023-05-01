@@ -29,6 +29,7 @@ int			unset_env(char *str, t_hlist **env_h);
 void			reset_variable(t_hlist *node, char *contents);
 void			new_point(t_hlist **env_h, int key, char *str1, char *str2);
 void			set_list_end(t_hlist *new_end, t_hlist **env_h);
+void    		delete_node(t_hlist *temp, t_hlist **env_h);
 
 // ECHO MODULE
 void			putnendl(char *str, char c, int mode);

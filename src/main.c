@@ -177,10 +177,31 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 	}
 }
 
+void	clear_history(t_hlist **env_h)
+{
+	t_hlist 	*last;
+	t_hlist		*temp;
+	char    	*key_s = "history string";
+	int     	key_i;
+
+	key_i = get_key(key_s);
+	temp = env_h[key_i];
+	last = temp;
+	while ((key_i = ft_strcmp(key_s, temp->var_name)) && temp->next)
+		temp = temp->next;
+	delete_node(temp, env_h);
+	if (last != temp)
+		last->next = temp->next;
+	else
+		env_h[get_key(key_s)] = temp->next;
+	free_thlist(temp);
+}
+
 void	clear_terminal_at_start(t_hlist **env_h, char **environ) 
 {
 	char *str = "clear";
 	run_command(&str, env_h, environ);
+	clear_history(env_h);
 }
 
 int	main()
