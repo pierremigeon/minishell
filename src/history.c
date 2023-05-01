@@ -2,8 +2,20 @@
 
 int	history(t_hlist **env_h)
 {
-	printf("history function stub\n");
+	t_hlist	*temp;
+	char	*key_s = "history string";
+	int	key_i;
 
+	key_i = get_key(key_s);
+	if (!env_h[key_i])
+		return (1);
+	temp = env_h[key_i];
+	while ((key_i = ft_strcmp(key_s, temp->var_name)) && temp->next)
+		temp = temp->next;
+	if (key_i == 0)
+		ft_putstr(temp->contents);
+	else
+		ft_putstr("\n");
 	return (1);
 }
 
@@ -30,5 +42,3 @@ void	set_history(char *str, t_hlist **env_h)
 		}
 	}
 }
-
-
