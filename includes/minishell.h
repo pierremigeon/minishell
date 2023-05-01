@@ -17,6 +17,9 @@ typedef	struct		s_hlist
 	struct s_hlist	*last;
 }			t_hlist;
 
+//MAIN MODULE
+void			run_command(char **str, t_hlist **env_h, char **environ);
+
 //ENV BUILTINS MODULE
 int			env(t_hlist **env_h);
 int			env_2(t_hlist **env_h);
@@ -83,7 +86,8 @@ void			f_out(char **str);
 char			*no_path_variable(char *program);
 
 //HISTORY FEATURE MODULE
-int			history(t_hlist **env_h);
+int     		history(t_hlist **env_h, char **environ);
 void    		set_history(char *str, t_hlist **env_h);
+
 
 #endif

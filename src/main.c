@@ -116,7 +116,7 @@ int	equal_wspace(char *str1, char *str2, size_t len)
 	return (0);
 }
 
-int	built_in(char *str, t_hlist **env_h)
+int	built_in(char *str, t_hlist **env_h, char **environ)
 {
 	if (equal_wspace(str, "echo ", 4))
 		return (echo_0(str));
@@ -131,7 +131,7 @@ int	built_in(char *str, t_hlist **env_h)
 	if (equal_wspace(str, "exit ", 4) || equal_wspace(str, "quit ", 4))
 		exit(0);
 	if (equal_wspace(str, "H ", 3))
-		return (history(env_h));
+		return (history(env_h, environ));
 	return (0);
 }
 
@@ -168,7 +168,7 @@ void	run_command(char **str, t_hlist **env_h, char **environ)
 	set_history(*str, env_h);
 	if (expandable(*str)) 
 		*str = expand_command(*str, env_h);
-	if (!(built_in(*str, env_h)))
+	if (!(built_in(*str, env_h, environ)))
 	{
 		if ((exec_path = in_path(*str, env_h)))
 			fork_process(*str, environ, exec_path);
@@ -196,22 +196,10 @@ int	main()
 	ft_putstr("$> ");
 	while ((i = get_next_line(0, &line)) > 0)
 	{
-		if (*line && ft_strcmp("H", line))
+		if (*line)
 			run_command(&line, env_h, environ);
 		ft_putstr("$> ");
-		if (!ft_strcmp("H", line) && line2 && ft_strcmp("H", line2))
-		{
-			ft_putstr(line2);
-			write(1, "\n", 1);
-			run_command(&line2, env_h, environ);
-			ft_putstr("$> ");
-		}
-		if (ft_strcmp("H", line))
-		{
-			if(line2)
-				free(line2);
-			line2 = line;
-		}
+		free(line);
 	}
 	free_env(env_h);
 	if (i < 0)
