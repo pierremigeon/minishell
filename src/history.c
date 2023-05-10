@@ -1,11 +1,29 @@
 #include "../includes/minishell.h"
 
-int	history(t_hlist **env_h, char **environ)
+int	wrong_params(char *str)
+{
+	while (*str == ' ' && *str)
+		str++;
+	if (*str)
+		str++;
+	while (*str == ' ' && *str)
+		str++;
+	if (*str)
+	{
+		write(1, "Error: H command does not accept any parameters!\n", 49);
+		return(1);
+	}
+	return (0);
+}
+
+int	history(char *str, t_hlist **env_h, char **environ)
 {
 	t_hlist	*temp;
 	char	*key_s = "history string";
 	int	key_i;
 
+	if (wrong_params(str))
+		return (1);
 	key_i = get_key(key_s);
 	if (!env_h[key_i])
 		return (1);
@@ -24,6 +42,8 @@ int	history(t_hlist **env_h, char **environ)
 
 int	check_H(char *str)
 {
+	while (*str == ' ' && *str)
+		str++;
 	return (*str == 'H' && (*(str + 1) == '\0' || *(str + 1) == ' '));
 }
 

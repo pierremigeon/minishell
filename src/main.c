@@ -130,8 +130,8 @@ int	built_in(char *str, t_hlist **env_h, char **environ)
 		return (env(env_h));
 	if (equal_wspace(str, "exit ", 4) || equal_wspace(str, "quit ", 4))
 		exit(0);
-	if (equal_wspace(str, "H ", 3))
-		return (history(env_h, environ));
+	if (equal_wspace(str, "H ", 1))
+		return (history(str, env_h, environ));
 	return (0);
 }
 

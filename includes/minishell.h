@@ -87,8 +87,8 @@ void			f_out(char **str);
 char			*no_path_variable(char *program);
 
 //HISTORY FEATURE MODULE
-int     		history(t_hlist **env_h, char **environ);
+int     		history(char *str, t_hlist **env_h, char **environ);
 void    		set_history(char *str, t_hlist **env_h);
-
+int			wrong_params(char *str);
 
 #endif
