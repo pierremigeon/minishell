@@ -69,6 +69,12 @@ set environmental variable. With no input, same as calling env.
 delete environmental variables. 
 
 
+**H (history)**
+
+`H`
+
+display and re-execute the last executed command. Similar to pressing the up key on other terminals.
+
 ## Relevant Features:
 Environmental Variables are stored in a hash table. The nodes for each of the variables includes information about the length of the variable name and its contents for the sake of memory allocation during $ and ~ expansions. In this way, the time it takes to locate the variable is reduced, and the time it takes to expand the variable is also reduced due to having previously calculated string lengths. Obviously, this is a pretty minor speed up unless you were to have substantially more variables with extremely long names / stored values. However, I enjoy building hash tables and playing with linked lists. The order of placement into the hash table is maintained by linking each node through a second *next pointer, which is iterated through by the env builtin. This forms a doubly linked list. Pointers to the head and tail of the doubly linked list are stored in the last two sots (respectively) of the lookup table, allowing addition of new nodes to the end of the list without list transversal. In cases that environmental variables are deleted using unsetenv, entries are found in the hash table via lookup, and node deletion from the ordered list is facilitated due to the doubly linked structure (tranversal of the list to find the prior and subsequent nodes not necessary).
 
