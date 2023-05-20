@@ -1,13 +1,19 @@
 #include "../includes/minishell.h"
 
-int	wrong_params(char *str)
+char	*skip_command(char *str)
 {
-	while (*str == ' ' && *str)
+	while (ft_isspace(*str))
 		str++;
 	if (*str)
 		str++;
-	while (*str == ' ' && *str)
+	while (ft_isspace(*str))
 		str++;
+	return (str);
+}
+
+int	wrong_params(char *str)
+{
+	str = skip_command(str);	
 	if (*str)
 	{
 		write(1, "Error: H command does not accept any parameters!\n", 49);
@@ -42,9 +48,9 @@ int	history(char *str, t_hlist **env_h, char **environ)
 
 int	check_H(char *str)
 {
-	while (*str == ' ' && *str)
+	while (ft_isspace(*str))
 		str++;
-	return (*str == 'H' && (*(str + 1) == '\0' || *(str + 1) == ' '));
+	return (*str == 'H' && (*(str + 1) == '\0' || ft_isspace(*(str + 1))));
 }
 
 void	set_history(char *str, t_hlist **env_h)

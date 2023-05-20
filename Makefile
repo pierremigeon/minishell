@@ -43,14 +43,14 @@ clangtest:
 
 clean:
 	@echo "Cleaning up files"
-	@rm ./$(OUT)
+	@rm -f ./$(OUT)
 	@if [ -e $(OUT).dSYM ]; then rm -rf $(OUT).dSYM; fi
 	@echo "Cleaning up libft"
 	@make clean -C libft
 
 fclean:
 	@echo "Cleaning up everything"
-	@rm ./$(OUT)
+	@rm -f ./$(OUT)
 	@if [ -e $(OUT).dSYM ]; then rm -rf $(OUT).dSYM; fi
 	@echo "Cleaning up libft"
 	@make fclean -C libft

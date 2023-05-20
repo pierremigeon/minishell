@@ -1,15 +1,15 @@
 
-
-
 User Story A:
 
 As a user, I want to be able to repeat a command using a built in history function so that I can conveniently view and re-execute the previously run command.
 
 1) Command can be run by typing H and pressing enter 
-2) Command ignores characters past first H
+2) Command throws error when anything beyond H is passed as argument 
 3) Command handles H being entered before any other input to the shell
 4) Command does not store itself as a command
 5) Command does not store empty lines as the last command
+
+Status: User story A is completed, merged into master.
 
 User Story B:
 
