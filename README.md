@@ -15,6 +15,11 @@ To check out my shell:
 3. run `minishell` to launch the shell.
 4. Typical commands can be used, as in a normal shell.
 
+Example:
+
+https://user-images.githubusercontent.com/107828529/235381803-b396bcc8-dded-41eb-891a-ce0089e8686b.mp4
+
+
 ## Project requirements:
 
 1. Create a UNIX command interpreter
