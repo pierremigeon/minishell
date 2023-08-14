@@ -1,15 +1,10 @@
-
-I've decided to start adding some new features to this, mostly for kicks and giggles. However in doing so, I've discovered that having a newer compiler seems to have broken the shell a bit, and so I will also be doing a lot of troubleshooting and debugging to get it back in standard working order!
-
-
 # Pierre's Minishell Project
 
 ### As Beautiful as a Shell...
 
-This is the 42 project Minishell! The instructions are to build a shell that reads commands from a user and executes them. Several Shell builtins are required. The shell can also execute binaries available through the users path, and fork new processes to do so.
+This is the 42 project Minishell! The instructions are to build a command line user interface that reads commands from a user and executes them. Several UNIX-style builtins are required. The minishell can also execute binaries available through the users path, and forks new processes to do so.
 
 To check out my shell:
-
 1. clone repository
 2. run `make` (places copy of minishell in /usr/local/bin/)
 3. run `minishell` to launch the shell.
